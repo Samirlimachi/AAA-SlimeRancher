@@ -104,3 +104,14 @@ InitTestScene*.unity*
 
 # Auto-generated cache in Assets folder
 /[Aa]ssets/[Ss]ceneDependencyCache*
+
+# Local capture output and private configuration
+/Assets/Temp/
+/Assets/Temp.meta
+.env
+.env.*
+!.env.example
+*.keystore
+*.jks
+*.pfx
+
