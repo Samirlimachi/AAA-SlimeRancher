@@ -4447,11 +4447,14 @@ MonoBehaviour:
   selected: 0
   coins: 250
   upgrade: 0
+  water: 0
   clock: 480
   health: 100
   energy: 100
   autoSave: 1
   autoLoad: 1
+  installLegacyVRControls: 1
+  showDesktopHUD: 1
   saveName: INICIO_rancho_v1.json
 --- !u!4 &1342949098
 Transform:
