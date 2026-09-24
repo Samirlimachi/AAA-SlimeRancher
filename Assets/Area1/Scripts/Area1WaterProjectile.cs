@@ -10,6 +10,8 @@ namespace SlimeRancher.Area1
         void OnCollisionEnter(Collision collision)
         {
             if (hit) return; hit = true;
+            var boss = collision.collider.GetComponentInParent<Area1EnemyBoss>();
+            if (boss) boss.HitByWater();
             var enemy = collision.collider.GetComponentInParent<Area1EnemySlime>();
             if (enemy) enemy.HitByWater();
             var item = collision.collider.GetComponentInParent<RanchItem>();
