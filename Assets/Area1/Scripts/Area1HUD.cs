@@ -11,6 +11,7 @@ namespace SlimeRancher.Area1
         UnityEngine.UI.Text waterText, waterHint;
         UnityEngine.UI.Image waterBorder, waterFill;
         public Camera viewCamera;
+        [SerializeField] bool showInventoryOnScreen;
         Text coins, health, energy, clock;
         Image healthFill, energyFill;
         readonly Text[] names = new Text[4], counts = new Text[4];
@@ -35,23 +36,26 @@ namespace SlimeRancher.Area1
             coins.color = new Color(1,.82f,.29f);
             Bar("VIDA",new Vector2(34,102),new Color(.97f,.16f,.3f),out healthFill,out health);
             Bar("ESTAMINA",new Vector2(34,48),new Color(.05f,.73f,.95f),out energyFill,out energy);
-            for(int i=0;i<4;i++)
+            if(showInventoryOnScreen)
             {
-                float x=390+i*132;
-                borders[i]=Panel("Ranura "+(i+1),new Vector2(x,38),new Vector2(122,130),Color.white);
-                Panel("Interior",new Vector2(x+4,42),new Vector2(114,122),new Color(.08f,.12f,.17f,.92f));
-                marks[i]=Panel("Tipo",new Vector2(x+43,134),new Vector2(36,23),Color.clear);
-                names[i]=Label("Objeto",new Vector2(x+7,82),new Vector2(108,50),20,TextAnchor.MiddleCenter);
-                counts[i]=Label("Cantidad",new Vector2(x+8,48),new Vector2(106,34),26,TextAnchor.MiddleCenter);
-                Label("Numero",new Vector2(x+8,135),new Vector2(30,25),18,TextAnchor.MiddleLeft).text=(i+1).ToString();
+                for(int i=0;i<4;i++)
+                {
+                    float x=390+i*132;
+                    borders[i]=Panel("Ranura "+(i+1),new Vector2(x,38),new Vector2(122,130),Color.white);
+                    Panel("Interior",new Vector2(x+4,42),new Vector2(114,122),new Color(.08f,.12f,.17f,.92f));
+                    marks[i]=Panel("Tipo",new Vector2(x+43,134),new Vector2(36,23),Color.clear);
+                    names[i]=Label("Objeto",new Vector2(x+7,82),new Vector2(108,50),20,TextAnchor.MiddleCenter);
+                    counts[i]=Label("Cantidad",new Vector2(x+8,48),new Vector2(106,34),26,TextAnchor.MiddleCenter);
+                    Label("Numero",new Vector2(x+8,135),new Vector2(30,25),18,TextAnchor.MiddleLeft).text=(i+1).ToString();
+                }
+                waterBorder=Panel("Deposito de agua",new Vector2(944,38),new Vector2(276,130),new Color(.2f,.75f,1));
+                Panel("Agua fondo",new Vector2(948,42),new Vector2(268,122),new Color(.04f,.12f,.2f,.94f));
+                waterFill=Panel("Agua nivel",new Vector2(960,52),new Vector2(244,9),new Color(.1f,.75f,1));
+                waterText=Label("Agua cantidad",new Vector2(958,92),new Vector2(252,60),26,TextAnchor.MiddleCenter);
+                waterHint=Label("Agua estado",new Vector2(954,63),new Vector2(256,30),17,TextAnchor.MiddleCenter);
+                Label("Seleccionar agua",new Vector2(944,8),new Vector2(276,26),18,TextAnchor.MiddleCenter).text="X  ·  SELECCIONAR AGUA";
+                Label("Cambiar deposito",new Vector2(390,8),new Vector2(518,26),18,TextAnchor.MiddleCenter).text="B  ·  CAMBIAR DEPOSITO";
             }
-            waterBorder=Panel("Deposito de agua",new Vector2(944,38),new Vector2(276,130),new Color(.2f,.75f,1));
-            Panel("Agua fondo",new Vector2(948,42),new Vector2(268,122),new Color(.04f,.12f,.2f,.94f));
-            waterFill=Panel("Agua nivel",new Vector2(960,52),new Vector2(244,9),new Color(.1f,.75f,1));
-            waterText=Label("Agua cantidad",new Vector2(958,92),new Vector2(252,60),26,TextAnchor.MiddleCenter);
-            waterHint=Label("Agua estado",new Vector2(954,63),new Vector2(256,30),17,TextAnchor.MiddleCenter);
-            Label("Seleccionar agua",new Vector2(944,8),new Vector2(276,26),18,TextAnchor.MiddleCenter).text="X  ·  SELECCIONAR AGUA";
-            Label("Cambiar deposito",new Vector2(390,8),new Vector2(518,26),18,TextAnchor.MiddleCenter).text="B  ·  CAMBIAR DEPOSITO";
         }
         RectTransform Element(string title,Vector2 position,Vector2 size)
         {
@@ -76,7 +80,7 @@ namespace SlimeRancher.Area1
             float h=4*Mathf.Tan(viewCamera.fieldOfView*.5f*Mathf.Deg2Rad);
             float scale=Mathf.Min(h/720,h*viewCamera.aspect/1280)*.93f;
             transform.localScale=Vector3.one*scale;
-            if(water)
+            if(water && waterText)
             {
                 waterText.text="AGUA  "+water.Amount+" / "+water.capacity;
                 waterHint.text=water.IsFilling?"CARGANDO DEL ESTANQUE":water.HasSource&&water.Amount>=water.capacity?"DEPOSITO LLENO":water.WaterSelected?"AGUA SELECCIONADA":"ASPIRA DEL ESTANQUE";
@@ -90,7 +94,7 @@ namespace SlimeRancher.Area1
             energyFill.rectTransform.sizeDelta=new Vector2(249*Mathf.Clamp01(game.energy/100),38);
             int minutes=Mathf.FloorToInt(game.clock%1440);
             clock.text="Dia "+(1+Mathf.FloorToInt(game.clock/1440))+"\n"+(minutes/60).ToString("00")+":"+(minutes%60).ToString("00");
-            for(int i=0;i<4;i++)
+            for(int i=0;i<4 && names[i];i++)
             {
                 var slot=game.slots[i];var data=slot.count>0?game.Data(slot.kind):null;
                 names[i].text=data?data.itemName:"Vacio";

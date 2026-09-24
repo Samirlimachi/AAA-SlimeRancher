@@ -210,6 +210,54 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SlimeRancher.Area1.Area1HandVisual
   left: 0
+--- !u!1 &24459952
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 24459953}
+  - component: {fileID: 24459954}
+  m_Layer: 0
+  m_Name: Spawn Pollo viejo 1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &24459953
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 24459952}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -7, y: 0.3, z: 4}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 739126432}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &24459954
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 24459952}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a35bd78af9dcfeb43a359f58ec97acda, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SlimeRancher.Area1.Area1RespawnPoint
+  kind: 4
+  respawnDelay: 8
+  spawnRadius: 0.35
+  claimRadius: 1.25
 --- !u!1 &41713259
 GameObject:
   m_ObjectHideFlags: 0
@@ -242,6 +290,54 @@ Transform:
   - {fileID: 311762953}
   m_Father: {fileID: 396898949089308018}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &65743955
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 65743956}
+  - component: {fileID: 65743957}
+  m_Layer: 0
+  m_Name: Spawn Slime rosado 1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &65743956
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 65743955}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -6, y: 0.4, z: -1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1135583101}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &65743957
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 65743955}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a35bd78af9dcfeb43a359f58ec97acda, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SlimeRancher.Area1.Area1RespawnPoint
+  kind: 0
+  respawnDelay: 8
+  spawnRadius: 0.35
+  claimRadius: 1.25
 --- !u!1001 &79984392
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -315,7 +411,8 @@ PrefabInstance:
       value: Aspiradora
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 8164078558771037576, guid: 6d01686e332f3374a9f9afcc7c297ddc, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6d01686e332f3374a9f9afcc7c297ddc, type: 3}
@@ -406,83 +503,10 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: b48f75252f27c5542bdbfec1645807e1, type: 3}
   m_PrefabInstance: {fileID: 80883135}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &90507568
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 687850135}
-    m_Modifications:
-    - target: {fileID: -8679921383154817045, guid: ad5c6c4162cc6954f9d53dd4834d9f45, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1.65
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: ad5c6c4162cc6954f9d53dd4834d9f45, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 1.65
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: ad5c6c4162cc6954f9d53dd4834d9f45, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 1.65
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: ad5c6c4162cc6954f9d53dd4834d9f45, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: ad5c6c4162cc6954f9d53dd4834d9f45, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.825
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: ad5c6c4162cc6954f9d53dd4834d9f45, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: ad5c6c4162cc6954f9d53dd4834d9f45, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.7071068
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: ad5c6c4162cc6954f9d53dd4834d9f45, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: ad5c6c4162cc6954f9d53dd4834d9f45, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0.7071068
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: ad5c6c4162cc6954f9d53dd4834d9f45, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: ad5c6c4162cc6954f9d53dd4834d9f45, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: ad5c6c4162cc6954f9d53dd4834d9f45, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: ad5c6c4162cc6954f9d53dd4834d9f45, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -7635826562936255635, guid: ad5c6c4162cc6954f9d53dd4834d9f45, type: 3}
-      propertyPath: 'm_Materials.Array.data[0]'
-      value: 
-      objectReference: {fileID: 2100000, guid: f03deddcf4c4c6d43a71e1b75689271e, type: 2}
-    - target: {fileID: 919132149155446097, guid: ad5c6c4162cc6954f9d53dd4834d9f45, type: 3}
-      propertyPath: m_Name
-      value: tripo_pbr_model_6f719e4b-af2c-4788-af21-e10411c0ff01
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: ad5c6c4162cc6954f9d53dd4834d9f45, type: 3}
---- !u!4 &90507569 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: ad5c6c4162cc6954f9d53dd4834d9f45, type: 3}
-  m_PrefabInstance: {fileID: 90507568}
+--- !u!1 &99488893 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 9d3dbe8b2fff235458eef74d57aa080d, type: 3}
+  m_PrefabInstance: {fileID: 989913567}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &135574099
 GameObject:
@@ -598,6 +622,54 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 104046d57dab97743b9e5f83b53ee15b, type: 3}
   m_PrefabInstance: {fileID: 138040362}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &182205562
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 182205563}
+  - component: {fileID: 182205564}
+  m_Layer: 0
+  m_Name: Spawn Slime rosado 3
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &182205563
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 182205562}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1, y: 0.4, z: 6}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1135583101}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &182205564
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 182205562}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a35bd78af9dcfeb43a359f58ec97acda, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SlimeRancher.Area1.Area1RespawnPoint
+  kind: 0
+  respawnDelay: 8
+  spawnRadius: 0.35
+  claimRadius: 1.25
 --- !u!1 &209351088
 GameObject:
   m_ObjectHideFlags: 0
@@ -710,7 +782,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!136 &230945816
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -1032,6 +1104,109 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 6c2d0c78286bbf34f85f39a8735d14eb, type: 3}
   m_PrefabInstance: {fileID: 311762952}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &327994501
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 327994505}
+  - component: {fileID: 327994504}
+  - component: {fileID: 327994503}
+  - component: {fileID: 327994502}
+  m_Layer: 0
+  m_Name: JEFE ENEMIGO - AREA1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &327994502
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 327994501}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b76bc27177a02574292d86a8f09e2191, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SlimeRancher.Area1.Area1EnemyBoss
+  maxWaterHits: 12
+  detectionRange: 20
+  flightSpeed: 3.2
+  attackDistance: 2.3
+  attackCooldown: 1.1
+  flightHeight: 1.8
+  hitsToDefeatSlime: 3
+  playerDamage: 18
+--- !u!135 &327994503
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 327994501}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 1.85
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!54 &327994504
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 327994501}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 1
+  m_Constraints: 0
+  m_CollisionDetection: 3
+--- !u!4 &327994505
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 327994501}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -4, y: 4.5, z: 6}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 378428513}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &338336698
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1247,6 +1422,80 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &378428512
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 327994505}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: 52736d6f7bf6654478f1603f048dce34, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 3.5
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 52736d6f7bf6654478f1603f048dce34, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 3.5
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 52736d6f7bf6654478f1603f048dce34, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 3.5
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 52736d6f7bf6654478f1603f048dce34, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 52736d6f7bf6654478f1603f048dce34, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 52736d6f7bf6654478f1603f048dce34, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 52736d6f7bf6654478f1603f048dce34, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 52736d6f7bf6654478f1603f048dce34, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 52736d6f7bf6654478f1603f048dce34, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 52736d6f7bf6654478f1603f048dce34, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 52736d6f7bf6654478f1603f048dce34, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 52736d6f7bf6654478f1603f048dce34, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 52736d6f7bf6654478f1603f048dce34, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 52736d6f7bf6654478f1603f048dce34, type: 3}
+      propertyPath: m_Name
+      value: Modelo JEFE ENEMIGO
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 52736d6f7bf6654478f1603f048dce34, type: 3}
+--- !u!4 &378428513 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 52736d6f7bf6654478f1603f048dce34, type: 3}
+  m_PrefabInstance: {fileID: 378428512}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &415006557
 GameObject:
   m_ObjectHideFlags: 0
@@ -1718,6 +1967,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 551918301}
     m_Modifications:
+    - target: {fileID: 21138633217206511, guid: e914814db42ef284f8d7cc0127e45342, type: 3}
+      propertyPath: m_FontSize
+      value: 42
+      objectReference: {fileID: 0}
+    - target: {fileID: 21138633217206511, guid: e914814db42ef284f8d7cc0127e45342, type: 3}
+      propertyPath: m_Color.rgba
+      value: 4294963896
+      objectReference: {fileID: 0}
+    - target: {fileID: 21138633217206511, guid: e914814db42ef284f8d7cc0127e45342, type: 3}
+      propertyPath: m_CharacterSize
+      value: 0.8
+      objectReference: {fileID: 0}
     - target: {fileID: 678038421833723570, guid: e914814db42ef284f8d7cc0127e45342, type: 3}
       propertyPath: ReadInput
       value: 0
@@ -1729,6 +1990,18 @@ PrefabInstance:
     - target: {fileID: 678038421833723570, guid: e914814db42ef284f8d7cc0127e45342, type: 3}
       propertyPath: demoSlimes.Array.size
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3246744547309267324, guid: e914814db42ef284f8d7cc0127e45342, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.85
+      objectReference: {fileID: 0}
+    - target: {fileID: 3246744547309267324, guid: e914814db42ef284f8d7cc0127e45342, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.85
+      objectReference: {fileID: 0}
+    - target: {fileID: 3246744547309267324, guid: e914814db42ef284f8d7cc0127e45342, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.85
       objectReference: {fileID: 0}
     - target: {fileID: 3246744547309267324, guid: e914814db42ef284f8d7cc0127e45342, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1748,15 +2021,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3246744547309267324, guid: e914814db42ef284f8d7cc0127e45342, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3246744547309267324, guid: e914814db42ef284f8d7cc0127e45342, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3246744547309267324, guid: e914814db42ef284f8d7cc0127e45342, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3246744547309267324, guid: e914814db42ef284f8d7cc0127e45342, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -1772,15 +2045,47 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3318097069728724339, guid: e914814db42ef284f8d7cc0127e45342, type: 3}
       propertyPath: m_LocalScale.x
-      value: 75
+      value: 48.03
       objectReference: {fileID: 0}
     - target: {fileID: 3318097069728724339, guid: e914814db42ef284f8d7cc0127e45342, type: 3}
       propertyPath: m_LocalScale.y
-      value: 75
+      value: 48.03
       objectReference: {fileID: 0}
     - target: {fileID: 3318097069728724339, guid: e914814db42ef284f8d7cc0127e45342, type: 3}
       propertyPath: m_LocalScale.z
-      value: 75
+      value: 48.03
+      objectReference: {fileID: 0}
+    - target: {fileID: 3318097069728724339, guid: e914814db42ef284f8d7cc0127e45342, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3318097069728724339, guid: e914814db42ef284f8d7cc0127e45342, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.036
+      objectReference: {fileID: 0}
+    - target: {fileID: 3318097069728724339, guid: e914814db42ef284f8d7cc0127e45342, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.1309
+      objectReference: {fileID: 0}
+    - target: {fileID: 3568022074090912580, guid: e914814db42ef284f8d7cc0127e45342, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.00135
+      objectReference: {fileID: 0}
+    - target: {fileID: 3568022074090912580, guid: e914814db42ef284f8d7cc0127e45342, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.00135
+      objectReference: {fileID: 0}
+    - target: {fileID: 3568022074090912580, guid: e914814db42ef284f8d7cc0127e45342, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.00135
+      objectReference: {fileID: 0}
+    - target: {fileID: 3568022074090912580, guid: e914814db42ef284f8d7cc0127e45342, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.19
+      objectReference: {fileID: 0}
+    - target: {fileID: 3568022074090912580, guid: e914814db42ef284f8d7cc0127e45342, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.01
       objectReference: {fileID: 0}
     - target: {fileID: 8090835155567672369, guid: e914814db42ef284f8d7cc0127e45342, type: 3}
       propertyPath: m_Name
@@ -1822,6 +2127,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8090835155567672369, guid: e914814db42ef284f8d7cc0127e45342, type: 3}
       insertIndex: -1
       addedObject: {fileID: 480425380}
+    - targetCorrespondingSourceObject: {fileID: 8090835155567672369, guid: e914814db42ef284f8d7cc0127e45342, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 480425381}
   m_SourcePrefab: {fileID: 100100000, guid: e914814db42ef284f8d7cc0127e45342, type: 3}
 --- !u!114 &480425371 stripped
 MonoBehaviour:
@@ -2078,6 +2386,19 @@ MonoBehaviour:
   waterMaterial: {fileID: 2100000, guid: 5295932b7d70fba46b60d7eadf67342a, type: 2}
   range: 6
   unitsPerSecond: 6
+--- !u!114 &480425381
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 480425373}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb689bd9209dc6340838dcba9cee169a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SlimeRancher.Area1.Area1GunInventory
+  font: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
 --- !u!4 &495120721 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: b55c6de486cb5f74a93cfe4248f01604, type: 3}
@@ -2427,6 +2748,10 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7917674758246323947, guid: 77e7c27b2c5525e4aa8cc9f99d654486, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.7
+      objectReference: {fileID: 0}
     - target: {fileID: 7981564641127861966, guid: 77e7c27b2c5525e4aa8cc9f99d654486, type: 3}
       propertyPath: m_Enabled
       value: 0
@@ -2482,6 +2807,14 @@ PrefabInstance:
     - target: {fileID: 8828017557219131208, guid: 77e7c27b2c5525e4aa8cc9f99d654486, type: 3}
       propertyPath: m_Enabled
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9059786329452581396, guid: 77e7c27b2c5525e4aa8cc9f99d654486, type: 3}
+      propertyPath: m_CameraYOffset
+      value: 1.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 9059786329452581396, guid: 77e7c27b2c5525e4aa8cc9f99d654486, type: 3}
+      propertyPath: m_RequestedTrackingOriginMode
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2552,7 +2885,7 @@ MonoBehaviour:
   vacuum: {fileID: 480425371}
   game: {fileID: 551918300}
   water: {fileID: 480425380}
-  wristDisplay: {fileID: 985830820}
+  wristDisplay: {fileID: 1637422312}
   head: {fileID: 302404464}
 --- !u!1 &551918299
 GameObject:
@@ -2637,6 +2970,54 @@ Transform:
   - {fileID: 758095216}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &557692211
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 557692212}
+  - component: {fileID: 557692213}
+  m_Layer: 0
+  m_Name: Spawn Pollo normal 4
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &557692212
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 557692211}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 7, y: 0.3, z: 4}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1647818067}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &557692213
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 557692211}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a35bd78af9dcfeb43a359f58ec97acda, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SlimeRancher.Area1.Area1RespawnPoint
+  kind: 3
+  respawnDelay: 8
+  spawnRadius: 0.35
+  claimRadius: 1.25
 --- !u!4 &606884253 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3988242182781197201, guid: 90b584bf6398be6419067935135abfb9, type: 3}
@@ -2835,8 +3216,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 90507569}
+  m_Children: []
   m_Father: {fileID: 230945817}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &694234760 stripped
@@ -2896,6 +3276,89 @@ Transform:
   - {fileID: 6320214237683213402}
   m_Father: {fileID: 551918301}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &730908865
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 730908866}
+  - component: {fileID: 730908867}
+  m_Layer: 0
+  m_Name: Spawn Pollo viejo 4
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &730908866
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 730908865}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 7, y: 0.3, z: -1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 739126432}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &730908867
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 730908865}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a35bd78af9dcfeb43a359f58ec97acda, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SlimeRancher.Area1.Area1RespawnPoint
+  kind: 4
+  respawnDelay: 8
+  spawnRadius: 0.35
+  claimRadius: 1.25
+--- !u!1 &739126431
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 739126432}
+  m_Layer: 0
+  m_Name: Spawns - Pollo viejo
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &739126432
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 739126431}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 24459953}
+  - {fileID: 1956763356}
+  - {fileID: 2079246880}
+  - {fileID: 730908866}
+  m_Father: {fileID: 817410861}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &758095215
 GameObject:
   m_ObjectHideFlags: 0
@@ -2930,6 +3393,54 @@ Transform:
   - {fileID: 495120721}
   m_Father: {fileID: 551918301}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &779032961
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 779032962}
+  - component: {fileID: 779032963}
+  m_Layer: 0
+  m_Name: Spawn Pollo normal 1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &779032962
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 779032961}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -6, y: 0.3, z: -5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1647818067}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &779032963
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 779032961}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a35bd78af9dcfeb43a359f58ec97acda, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SlimeRancher.Area1.Area1RespawnPoint
+  kind: 3
+  respawnDelay: 8
+  spawnRadius: 0.35
+  claimRadius: 1.25
 --- !u!1001 &790153567
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2984,7 +3495,7 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 41be023df6d369340ab5138cc31eee53, type: 2}
     - target: {fileID: 919132149155446097, guid: b0c4792c62e2ad44c8e0e38f3f6648ac, type: 3}
       propertyPath: m_Name
-      value: Recolector Rojo
+      value: Recolector Rojo - Mejorado
       objectReference: {fileID: 0}
     - target: {fileID: 1151388028547126963, guid: b0c4792c62e2ad44c8e0e38f3f6648ac, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2997,8 +3508,48 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: b0c4792c62e2ad44c8e0e38f3f6648ac, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 877795680}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: b0c4792c62e2ad44c8e0e38f3f6648ac, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 877795679}
   m_SourcePrefab: {fileID: 100100000, guid: b0c4792c62e2ad44c8e0e38f3f6648ac, type: 3}
+--- !u!1 &817410860
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 817410861}
+  m_Layer: 0
+  m_Name: Spawns AREA1 - Slimes y Pollos
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &817410861
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 817410860}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1135583101}
+  - {fileID: 1647818067}
+  - {fileID: 739126432}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &821493944
 GameObject:
   m_ObjectHideFlags: 0
@@ -3282,12 +3833,52 @@ Transform:
   m_GameObject: {fileID: 868608261}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.035, z: -0.16}
+  m_LocalPosition: {x: 0, y: 0.03, z: -0.29}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 480425372}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &877795678 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: b0c4792c62e2ad44c8e0e38f3f6648ac, type: 3}
+  m_PrefabInstance: {fileID: 790153567}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &877795679
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 877795678}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ef2d3fd3fc79454dab3a5d3939d51b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SlimeRancher.Area1.Area1PlortCollector
+  collectorName: Recolector Rojo - Mejorado
+  valueMultiplier: 2
+--- !u!65 &877795680
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 877795678}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.9, y: 1.1, z: 0.95}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &934031548
 GameObject:
   m_ObjectHideFlags: 0
@@ -3572,7 +4163,7 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 610c0d199ae5d1143bf4804548cb02be, type: 2}
     - target: {fileID: 919132149155446097, guid: 9d3dbe8b2fff235458eef74d57aa080d, type: 3}
       propertyPath: m_Name
-      value: Recolector Azul
+      value: Recolector Negro - Premium
       objectReference: {fileID: 0}
     - target: {fileID: 1151388028547126963, guid: 9d3dbe8b2fff235458eef74d57aa080d, type: 3}
       propertyPath: m_LocalPosition.x
@@ -3585,7 +4176,13 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 9d3dbe8b2fff235458eef74d57aa080d, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1217106545}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 9d3dbe8b2fff235458eef74d57aa080d, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1217106544}
   m_SourcePrefab: {fileID: 100100000, guid: 9d3dbe8b2fff235458eef74d57aa080d, type: 3}
 --- !u!1001 &1003470803
 PrefabInstance:
@@ -3751,6 +4348,54 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 9be0fcf343574624d8fb2f850cf9bed2, type: 3}
   m_PrefabInstance: {fileID: 1009311535}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1023381365
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1023381366}
+  - component: {fileID: 1023381367}
+  m_Layer: 0
+  m_Name: Spawn Slime rosado 4
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1023381366
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1023381365}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 6, y: 0.4, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1135583101}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1023381367
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1023381365}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a35bd78af9dcfeb43a359f58ec97acda, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SlimeRancher.Area1.Area1RespawnPoint
+  kind: 0
+  respawnDelay: 8
+  spawnRadius: 0.35
+  claimRadius: 1.25
 --- !u!1 &1064996580
 GameObject:
   m_ObjectHideFlags: 0
@@ -4126,6 +4771,41 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7917674758919744168, guid: 77e7c27b2c5525e4aa8cc9f99d654486, type: 3}
   m_PrefabInstance: {fileID: 548910702}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1135583100
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1135583101}
+  m_Layer: 0
+  m_Name: Spawns - Slime rosado
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1135583101
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1135583100}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 65743956}
+  - {fileID: 1554620338}
+  - {fileID: 182205563}
+  - {fileID: 1023381366}
+  m_Father: {fileID: 817410861}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1203408611
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4180,7 +4860,7 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: ae28851a6b4cad74ca150cfde5e99025, type: 2}
     - target: {fileID: 919132149155446097, guid: b55c6de486cb5f74a93cfe4248f01604, type: 3}
       propertyPath: m_Name
-      value: Recolector verde
+      value: "Recolector Verde - B\xE1sico"
       objectReference: {fileID: 0}
     - target: {fileID: 1151388028547126963, guid: b55c6de486cb5f74a93cfe4248f01604, type: 3}
       propertyPath: m_LocalPosition.x
@@ -4197,13 +4877,54 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: b55c6de486cb5f74a93cfe4248f01604, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1590762719}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: b55c6de486cb5f74a93cfe4248f01604, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1590762718}
   m_SourcePrefab: {fileID: 100100000, guid: b55c6de486cb5f74a93cfe4248f01604, type: 3}
 --- !u!4 &1217106543 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 9d3dbe8b2fff235458eef74d57aa080d, type: 3}
   m_PrefabInstance: {fileID: 989913567}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1217106544
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 99488893}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ef2d3fd3fc79454dab3a5d3939d51b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SlimeRancher.Area1.Area1PlortCollector
+  collectorName: Recolector Negro - Premium
+  valueMultiplier: 3
+--- !u!65 &1217106545
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 99488893}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.9, y: 1.1, z: 0.95}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &1231072312
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4752,6 +5473,142 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: b48f75252f27c5542bdbfec1645807e1, type: 3}
   m_PrefabInstance: {fileID: 1511870890}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1540401345
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1540401346}
+  - component: {fileID: 1540401347}
+  m_Layer: 0
+  m_Name: Spawn Pollo normal 3
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1540401346
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1540401345}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 3, y: 0.3, z: -1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1647818067}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1540401347
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1540401345}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a35bd78af9dcfeb43a359f58ec97acda, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SlimeRancher.Area1.Area1RespawnPoint
+  kind: 3
+  respawnDelay: 8
+  spawnRadius: 0.35
+  claimRadius: 1.25
+--- !u!1 &1554620337
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1554620338}
+  - component: {fileID: 1554620339}
+  m_Layer: 0
+  m_Name: Spawn Slime rosado 2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1554620338
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1554620337}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -4, y: 0.4, z: 4}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1135583101}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1554620339
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1554620337}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a35bd78af9dcfeb43a359f58ec97acda, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SlimeRancher.Area1.Area1RespawnPoint
+  kind: 0
+  respawnDelay: 8
+  spawnRadius: 0.35
+  claimRadius: 1.25
+--- !u!1 &1590762717 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: b55c6de486cb5f74a93cfe4248f01604, type: 3}
+  m_PrefabInstance: {fileID: 1203408611}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1590762718
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1590762717}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ef2d3fd3fc79454dab3a5d3939d51b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SlimeRancher.Area1.Area1PlortCollector
+  collectorName: "Recolector Verde - B\xE1sico"
+  valueMultiplier: 1
+--- !u!65 &1590762719
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1590762717}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.9, y: 1.1, z: 0.95}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &1636707532
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4834,6 +5691,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: d31571ab5c8bbef4a8128d8905b8f05e, type: 3}
   m_PrefabInstance: {fileID: 1636707532}
   m_PrefabAsset: {fileID: 0}
+--- !u!102 &1637422312 stripped
+TextMesh:
+  m_CorrespondingSourceObject: {fileID: 21138633217206511, guid: e914814db42ef284f8d7cc0127e45342, type: 3}
+  m_PrefabInstance: {fileID: 480425370}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1641798537
 GameObject:
   m_ObjectHideFlags: 0
@@ -4865,6 +5727,41 @@ Transform:
   m_Children:
   - {fileID: 628603630}
   m_Father: {fileID: 7320005247630109035}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1647818066
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1647818067}
+  m_Layer: 0
+  m_Name: Spawns - Pollo normal
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1647818067
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1647818066}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 779032962}
+  - {fileID: 1943579058}
+  - {fileID: 1540401346}
+  - {fileID: 557692212}
+  m_Father: {fileID: 817410861}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1679875655 stripped
 GameObject:
@@ -5055,6 +5952,7 @@ MonoBehaviour:
   game: {fileID: 551918300}
   water: {fileID: 480425380}
   viewCamera: {fileID: 302404465}
+  showInventoryOnScreen: 0
   hudMaterial: {fileID: 2100000, guid: 5f39b655be37c2c49ae68ad83fddf221, type: 2}
 --- !u!224 &1767706943
 RectTransform:
@@ -5219,6 +6117,102 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1935016036}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1943579057
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1943579058}
+  - component: {fileID: 1943579059}
+  m_Layer: 0
+  m_Name: Spawn Pollo normal 2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1943579058
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1943579057}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -2, y: 0.3, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1647818067}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1943579059
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1943579057}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a35bd78af9dcfeb43a359f58ec97acda, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SlimeRancher.Area1.Area1RespawnPoint
+  kind: 3
+  respawnDelay: 8
+  spawnRadius: 0.35
+  claimRadius: 1.25
+--- !u!1 &1956763355
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1956763356}
+  - component: {fileID: 1956763357}
+  m_Layer: 0
+  m_Name: Spawn Pollo viejo 2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1956763356
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1956763355}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -2, y: 0.3, z: -5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 739126432}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1956763357
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1956763355}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a35bd78af9dcfeb43a359f58ec97acda, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SlimeRancher.Area1.Area1RespawnPoint
+  kind: 4
+  respawnDelay: 8
+  spawnRadius: 0.35
+  claimRadius: 1.25
 --- !u!1001 &1960208641
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5393,6 +6387,54 @@ Transform:
   - {fileID: 439023129}
   m_Father: {fileID: 7398843057749569128}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2079246879
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2079246880}
+  - component: {fileID: 2079246881}
+  m_Layer: 0
+  m_Name: Spawn Pollo viejo 3
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2079246880
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2079246879}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 3, y: 0.3, z: 5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 739126432}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2079246881
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2079246879}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a35bd78af9dcfeb43a359f58ec97acda, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SlimeRancher.Area1.Area1RespawnPoint
+  kind: 4
+  respawnDelay: 8
+  spawnRadius: 0.35
+  claimRadius: 1.25
 --- !u!1 &2098581903 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7917674758240283208, guid: 77e7c27b2c5525e4aa8cc9f99d654486, type: 3}
@@ -10443,3 +11485,5 @@ SceneRoots:
   - {fileID: 1767706943}
   - {fileID: 230945817}
   - {fileID: 209351090}
+  - {fileID: 327994505}
+  - {fileID: 817410861}
