@@ -42,6 +42,18 @@ MonoBehaviour:
   spawnPollo:
     clip: {fileID: 8300000, guid: 3a9cd6fa5820db648a4d9020905182a3, type: 3}
     volume: 1
+  cacareoPollo1:
+    clip: {fileID: 8300000, guid: 9b9211d3604eaf24880d10a2f6989e00, type: 3}
+    volume: 0.7
+  cacareoPollo2:
+    clip: {fileID: 8300000, guid: 2da645e799900db40836ab26dfcd3a5f, type: 3}
+    volume: 0.7
+  cacareoPollo3:
+    clip: {fileID: 8300000, guid: ad14177d3e560a84a890bf3d1e188b2d, type: 3}
+    volume: 0.7
+  ambienteArea1:
+    clip: {fileID: 8300000, guid: da65da1ff20e36c42937b0b2d238a11d, type: 3}
+    volume: 0.35
   jugadorCamina:
     clip: {fileID: 8300000, guid: 0a5efa9c9f07c5d4da9c471fca19307d, type: 3}
     volume: 0.6

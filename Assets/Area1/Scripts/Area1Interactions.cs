@@ -19,6 +19,7 @@ namespace SlimeRancher.Area1
         void Start()
         {
             if (!GetComponent<Area1PlayerSounds>()) gameObject.AddComponent<Area1PlayerSounds>();
+            if (!GetComponent<Area1AmbientAudio>()) gameObject.AddComponent<Area1AmbientAudio>();
         }
 
         public void SelectNext()

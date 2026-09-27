@@ -6,8 +6,49 @@ using SlimeRancherVR;
 
 namespace SlimeRancherVR.Editor
 {
+    [InitializeOnLoad]
     public static class SlimeMenuInstaller
     {
+        const string ThemePath = "Assets/01_Scripts/SlimeMenus/SlimeMenuTheme.asset";
+        const string LogoPath = "Assets/Menus/Slime_Rancher_logo.png";
+
+        static SlimeMenuInstaller() => EditorApplication.delayCall += ConfigureLogo;
+
+        [MenuItem("Beatrix/Conectar logo del menu")]
+        static void ConfigureLogo()
+        {
+            if (AssetImporter.GetAtPath(LogoPath) is TextureImporter importer &&
+                (importer.textureType != TextureImporterType.Sprite || importer.spriteImportMode != SpriteImportMode.Single || !importer.alphaIsTransparency))
+            {
+                importer.textureType = TextureImporterType.Sprite;
+                importer.spriteImportMode = SpriteImportMode.Single;
+                importer.alphaIsTransparency = true;
+                importer.SaveAndReimport();
+            }
+
+            var logo = AssetDatabase.LoadAssetAtPath<Sprite>(LogoPath);
+            var theme = AssetDatabase.LoadAssetAtPath<SlimeMenuTheme>(ThemePath);
+            if (!logo)
+            {
+                Debug.LogError("No se pudo importar el logo como Sprite unico: " + LogoPath);
+                return;
+            }
+            if (!theme)
+            {
+                Debug.LogError("No se encontro el tema del menu: " + ThemePath);
+                return;
+            }
+            if (theme.logo == logo)
+            {
+                Debug.Log("Logo Slime Rancher ya conectado al tema.");
+                return;
+            }
+            theme.logo = logo;
+            EditorUtility.SetDirty(theme);
+            AssetDatabase.SaveAssets();
+            Debug.Log("Logo Slime Rancher conectado al tema del menu.");
+        }
+
         [MenuItem("Beatrix/Instalar menus VR en escena actual")]
         public static void Install()
         {
@@ -17,12 +58,11 @@ namespace SlimeRancherVR.Editor
             var existing = Object.FindObjectsByType<SlimeMenuController>();
             foreach (var existingController in existing)
                 Object.DestroyImmediate(existingController.gameObject);
-            const string themePath = "Assets/01_Scripts/SlimeMenus/SlimeMenuTheme.asset";
-            var theme = AssetDatabase.LoadAssetAtPath<SlimeMenuTheme>(themePath);
+            var theme = AssetDatabase.LoadAssetAtPath<SlimeMenuTheme>(ThemePath);
             if (!theme)
             {
                 theme = ScriptableObject.CreateInstance<SlimeMenuTheme>();
-                AssetDatabase.CreateAsset(theme, themePath);
+                AssetDatabase.CreateAsset(theme, ThemePath);
                 AssetDatabase.SaveAssets();
             }
             var root = new GameObject("Menus VR - Slime Rancher");

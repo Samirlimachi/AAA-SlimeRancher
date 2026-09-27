@@ -39,6 +39,14 @@ namespace SlimeRancher.Area1
         public Sound plortEntraRecolector = new Sound();
         [Tooltip("Aparece un pollo nuevo.")]
         public Sound spawnPollo = new Sound();
+        [Tooltip("Cacareo ocasional de un pollo suelto.")]
+        public Sound cacareoPollo1 = new Sound { volume = .7f };
+        public Sound cacareoPollo2 = new Sound { volume = .7f };
+        public Sound cacareoPollo3 = new Sound { volume = .7f };
+
+        [Header("Ambiente")]
+        [Tooltip("Música o sonido de fondo en bucle durante AREA1.")]
+        public Sound ambienteArea1 = new Sound { volume = .35f };
 
         [Header("Jugador")]
         [Tooltip("Pasos al caminar (con joystick o caminando de verdad).")]

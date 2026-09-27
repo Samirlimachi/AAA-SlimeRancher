@@ -13,9 +13,19 @@ namespace SlimeRancher.Area1
         XRGrabInteractable grab;
         Vector3 home, direction;
         float nextTurn;
+        float nextCluck;
         bool wasGrounded;
         void Awake() { body = GetComponent<Rigidbody>(); item = GetComponent<RanchItem>(); grab = GetComponent<XRGrabInteractable>(); }
-        void Start() { SetHome(transform.position); }
+        void Start() { SetHome(transform.position); ScheduleCluck(); }
+        void Update()
+        {
+            if (Time.time < nextCluck) return;
+            if (!item.enabled || item.Consumed || body.isKinematic || !body.useGravity || (grab && grab.isSelected) || Mathf.Abs(body.linearVelocity.y) > .4f) { ScheduleCluck(); return; }
+            int sound = Random.Range(0, 3);
+            Area1Audio.Play(b => sound == 0 ? b.cacareoPollo1 : sound == 1 ? b.cacareoPollo2 : b.cacareoPollo3, transform.position, .8f);
+            ScheduleCluck();
+        }
+        void ScheduleCluck() { nextCluck = Time.time + Random.Range(9f, 21f); }
         public void SetHome(Vector3 position) { home = position; nextTurn = 0; }
         void FixedUpdate()
         {
