@@ -1157,6 +1157,8 @@ MonoBehaviour:
   controlsFontSize: 20
   controlsTextScale: 20
   controlsLineSpacing: 1.35
+  vrRigPrefab: {fileID: 8806329115733545877, guid: 77e7c27b2c5525e4aa8cc9f99d654486, type: 3}
+  rigEyeHeight: 1.7
 --- !u!4 &1535582579
 Transform:
   m_ObjectHideFlags: 0

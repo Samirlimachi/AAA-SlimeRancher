@@ -31,7 +31,10 @@ namespace SlimeRancher.Area1
             var game = RanchGame.Instance;
             if (!game || !IsPlort(item)) return false;
             int reward = Mathf.Max(1, item.data.saleValue) * Mathf.Max(1, valueMultiplier);
+            var position = item.transform.position;
             if (!item.Consume()) return false;
+            Area1Effects.PlortSold(position);
+            Area1Audio.Play(b => b.plortEntraRecolector, position);
             game.coins += reward;
             LastReward = reward;
             CollectedCount++;

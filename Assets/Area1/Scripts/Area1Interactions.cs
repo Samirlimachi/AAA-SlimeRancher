@@ -16,6 +16,11 @@ namespace SlimeRancher.Area1
         public Transform head;
         bool previousPrimary, previousSecondary;
         float nextShot;
+        void Start()
+        {
+            if (!GetComponent<Area1PlayerSounds>()) gameObject.AddComponent<Area1PlayerSounds>();
+        }
+
         public void SelectNext()
         {
             if (!game) return;
@@ -34,11 +39,31 @@ namespace SlimeRancher.Area1
                 if (water) water.SelectWater(false);
             }
         }
+        public void SelectPrevious()
+        {
+            if (!game) return;
+            if (water && water.WaterSelected)
+            {
+                water.SelectWater(false);
+                game.Select(game.slots.Length - 1);
+            }
+            else if (water && game.selected == 0)
+            {
+                water.SelectWater(true);
+            }
+            else
+            {
+                game.Select(game.selected - 1);
+                if (water) water.SelectWater(false);
+            }
+        }
         void Update()
         {
             if (!vacuum || !game) return;
-            var left = RanchVRControls.ReadHand(XRNode.LeftHand, true);
-            var right = RanchVRControls.ReadHand(XRNode.RightHand, true);
+            // Real headset: XR InputDevices. Simulator: simulated Input System controllers.
+            bool simulator = Area1XRDeviceGuard.SimulatorActive;
+            var left = RanchVRControls.ReadHand(XRNode.LeftHand, simulator);
+            var right = RanchVRControls.ReadHand(XRNode.RightHand, simulator);
             // Direct PC shortcut for testing the fifth slot without VR controllers.
             var keyboard = Keyboard.current;
             if (keyboard != null && keyboard.digit5Key.wasPressedThisFrame && water)
@@ -46,33 +71,9 @@ namespace SlimeRancher.Area1
                 game.Select(game.slots.Length - 1);
                 water.SelectWater(true);
             }
-            // RanchVRControls has already moved the regular 1-4 selection this frame.
-            // Extend that existing A/B cycle with water as the fifth entry.
-            if (right.primary && !previousPrimary && water)
-            {
-                if (water.WaterSelected)
-                {
-                    water.SelectWater(false);
-                    game.Select(0);
-                }
-                else if (game.selected == 0)
-                {
-                    game.Select(game.slots.Length - 1);
-                    water.SelectWater(true);
-                }
-            }
-            if (right.secondary && !previousSecondary && water)
-            {
-                if (water.WaterSelected)
-                {
-                    water.SelectWater(false);
-                    game.Select(game.slots.Length - 1);
-                }
-                else if (game.selected == game.slots.Length - 1)
-                {
-                    water.SelectWater(true);
-                }
-            }
+            // AREA1 has no RanchVRControls, so A/B own the whole cycle: slots 1-4 plus water as slot 5.
+            if (right.primary && !previousPrimary) SelectNext();
+            if (right.secondary && !previousSecondary) SelectPrevious();
             previousPrimary = right.primary;
             previousSecondary = right.secondary;
             var pickup = vacuum.GetComponent<VacuumPickup>();

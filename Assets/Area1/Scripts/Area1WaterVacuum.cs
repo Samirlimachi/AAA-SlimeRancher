@@ -8,6 +8,7 @@ namespace SlimeRancher.Area1
     public sealed class Area1WaterVacuum : MonoBehaviour
     {
         public int capacity = 30;
+        public int waterDamage = 1;
         int amount { get => RanchGame.Instance ? RanchGame.Instance.water : 0; set { if (RanchGame.Instance) RanchGame.Instance.water = value; } }
         public Material waterMaterial;
         public float range = 6, unitsPerSecond = 6;
@@ -17,6 +18,7 @@ namespace SlimeRancher.Area1
         public bool HasSource { get; private set; }
         SlimeVacuum vacuum;
         LineRenderer stream;
+        ParticleSystem suctionParticles;
         Vector3 sourcePoint;
         float fraction, nextShot;
         bool requested;
@@ -27,6 +29,7 @@ namespace SlimeRancher.Area1
             stream = go.AddComponent<LineRenderer>(); stream.sharedMaterial = waterMaterial;
             stream.positionCount = 2; stream.startWidth = .045f; stream.endWidth = .12f;
             stream.numCapVertices = 4; stream.enabled = false;
+            suctionParticles = Area1Effects.CreateSuctionStream(transform);
         }
         public void SelectWater(bool selected) { WaterSelected = selected; }
         bool Owned(Transform t) => t.IsChildOf(transform) || (vacuum.playerRoot && t.IsChildOf(vacuum.playerRoot));
@@ -74,6 +77,7 @@ namespace SlimeRancher.Area1
         {
             stream.enabled = IsFilling;
             if (stream.enabled) { stream.SetPosition(0, vacuum.muzzle.position); stream.SetPosition(1, sourcePoint); }
+            if (suctionParticles) Area1Effects.DriveSuctionStream(suctionParticles, IsFilling, sourcePoint, vacuum.muzzle.position);
         }
         public bool Shoot()
         {
@@ -86,15 +90,17 @@ namespace SlimeRancher.Area1
             go.layer = LayerMask.NameToLayer("Ignore Raycast");
             go.GetComponent<Renderer>().sharedMaterial = waterMaterial;
             var rb = go.AddComponent<Rigidbody>(); rb.mass = .08f; rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
-            var projectile = go.AddComponent<Area1WaterProjectile>(); projectile.material = waterMaterial;
+            var projectile = go.AddComponent<Area1WaterProjectile>(); projectile.material = waterMaterial; projectile.damage = waterDamage;
             var collider = go.GetComponent<Collider>();
             foreach (var own in GetComponentsInChildren<Collider>()) Physics.IgnoreCollision(collider, own);
             if (vacuum.playerRoot) foreach (var own in vacuum.playerRoot.GetComponentsInChildren<Collider>()) Physics.IgnoreCollision(collider, own);
             rb.linearVelocity = vacuum.muzzle.forward * 12;
+            Area1Effects.WaterSpray(point, vacuum.muzzle.forward);
+            Area1Effects.AttachWaterTrail(go.transform);
             amount--; nextShot = Time.time + .25f;
             RanchVRControls.Haptic(.2f);
             return true;
         }
-        void OnDisable() { requested = IsFilling = HasSource = false; fraction = 0; if (stream) stream.enabled = false; }
+        void OnDisable() { requested = IsFilling = HasSource = false; fraction = 0; if (stream) stream.enabled = false; if (suctionParticles) Area1Effects.DriveSuctionStream(suctionParticles, false, default, default); }
     }
 }

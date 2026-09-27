@@ -13,17 +13,28 @@ public sealed class RanchGame : MonoBehaviour {
  public static RanchGame Instance {get;private set;}
  public RanchItemData[] catalog;
  public Transform player,worldRoot,upgradeStation;
+ // Where the player really stands: the tracked head over the rig floor. Walking around the room moves
+ // the head inside the rig, not the rig root (player), so enemies must aim here.
+ public Vector3 PlayerPosition{get{if(!player)return Vector3.zero;var cam=Camera.main;if(cam&&cam.transform.IsChildOf(player)){var p=cam.transform.position;return new Vector3(p.x,player.position.y,p.z);}return player.position;}}
  public Light sun;
  public RanchGarden garden;
  public RanchSlot[] slots={new RanchSlot(),new RanchSlot(),new RanchSlot(),new RanchSlot()};
  public int selected,coins=250,upgrade,water;
- public float clock=8*60,health=100,energy=100;
+ public float clock=8*60,health=100,energy=100,maxHealth=100;
  public bool autoSave=true,autoLoad=true;
  public bool installLegacyVRControls=true, showDesktopHUD=true;
  public string saveName="INICIO_rancho_v1.json";
  public string Message {get;private set;}="Recoge zanahorias, alimenta slimes y vende sus plorts.";
  public float MessageUntil {get;private set;}=20;
  public string SavePath=>Path.Combine(Application.persistentDataPath,saveName);
+ // Set by the menu's "Continuar partida": the next RanchGame loads its save on Start even with autoLoad off.
+ public static bool LoadRequested;
+ public static bool SaveExists(string file)=>File.Exists(Path.Combine(Application.persistentDataPath,file));
+ public static void DeleteSave(string file){var path=Path.Combine(Application.persistentDataPath,file);foreach(var p in new[]{path,path+".bak",path+".tmp"})if(File.Exists(p))File.Delete(p);}
+ // True once this session's world came from the save file.
+ public bool Loaded {get;private set;}
+ // Health reached zero (before the respawn). Falling off the map does not count.
+ public event Action Died;
  float nextSave=60,nextDamage; bool sprinting,lastInteract;
  Vector3 start;
  void Awake(){Instance=this;start=player?player.position:Vector3.zero;
@@ -31,7 +42,7 @@ public sealed class RanchGame : MonoBehaviour {
  if((UnityEditor.SessionState.GetBool("RanchValidation",false)||UnityEditor.SessionState.GetBool("VRControlValidation",false)||UnityEditor.SessionState.GetBool("PickupValidation",false))){autoSave=false;autoLoad=false;saveName="INICIO_validation_only.json";}
  #endif
  }
- void Start(){if(installLegacyVRControls&&player&&!player.GetComponent<RanchVRControls>()){var vr=player.gameObject.AddComponent<RanchVRControls>();vr.game=this;}if(autoLoad&&File.Exists(SavePath))LoadGame();}
+ void Start(){if(installLegacyVRControls&&player&&!player.GetComponent<RanchVRControls>()){var vr=player.gameObject.AddComponent<RanchVRControls>();vr.game=this;}if((autoLoad||LoadRequested)&&File.Exists(SavePath))LoadGame();LoadRequested=false;}
  public RanchItemData Data(RanchItemKind kind){foreach(var d in catalog)if(d&&d.kind==kind)return d;return null;}
  public int Limit(RanchItemKind kind)=>Data(kind).stackLimit+(upgrade>0?10:0);
  public bool CanStore(RanchItemKind kind){foreach(var s in slots)if(s.count==0||(s.kind==kind&&s.count<Limit(kind)))return true;return false;}
@@ -40,9 +51,10 @@ public sealed class RanchGame : MonoBehaviour {
  public RanchItem Spawn(RanchItemKind kind,Vector3 point,Quaternion rotation){var d=Data(kind);if(!d||!d.prefab)throw new InvalidOperationException("Falta prefab: "+kind);var go=Instantiate(d.prefab,point,rotation,worldRoot);go.name=d.itemName;var item=go.GetComponent<RanchItem>();item.data=d;item.Place(point,rotation);return item;}
  public void Select(int index){selected=(index+slots.Length)%slots.Length;}
  public void Notify(string value){Message=value;MessageUntil=Time.time+5;}
+ public void ClearMessage(){MessageUntil=0;}
  public bool Sprint(bool wanted,float dt){sprinting=wanted&&energy>1;if(sprinting)energy=Mathf.Max(0,energy-18*dt);return sprinting;}
- public void Damage(float amount){if(Time.time<nextDamage)return;nextDamage=Time.time+1;health=Mathf.Max(0,health-amount);Notify("¡Cuidado con el agua profunda!");if(health<=0)Respawn();}
- public void Respawn(){MovePlayer(start,0);health=100;energy=100;clock+=60;Notify("De vuelta en el rancho. Ha pasado una hora.");}
+ public void Damage(float amount){if(Time.time<nextDamage)return;nextDamage=Time.time+1;health=Mathf.Max(0,health-amount);Notify("¡Cuidado con el agua profunda!");if(health<=0){Respawn();Died?.Invoke();}}
+ public void Respawn(){MovePlayer(start,0);health=maxHealth;energy=100;clock+=60;Notify("De vuelta en el rancho. Ha pasado una hora.");}
  void MovePlayer(Vector3 point,float yaw){if(!player)return;var cc=player.GetComponent<CharacterController>();bool enabled=cc&&cc.enabled;if(cc)cc.enabled=false;player.SetPositionAndRotation(point,Quaternion.Euler(0,yaw,0));if(cc)cc.enabled=enabled;}
  public bool BuyUpgrade(){if(upgrade>0){Notify("Depósitos mejorados: 30 objetos por ranura.");return false;}if(coins<150){Notify("Necesitas 150 monedas para mejorar los depósitos.");return false;}coins-=150;upgrade=1;Notify("¡Mejora comprada! 30 objetos por ranura.");return true;}
  void Update(){
@@ -67,13 +79,13 @@ public sealed class RanchGame : MonoBehaviour {
  public bool LoadGame(){try{
   if(!File.Exists(SavePath)){Notify("Todavía no hay una partida guardada");return false;}
   var s=JsonUtility.FromJson<RanchSave>(File.ReadAllText(SavePath));
-  if(s==null||s.version!=1||s.slots==null||s.slots.Length!=4||s.items==null||s.items.Count>1000||s.coins<0||s.water<0||s.water>30||s.upgrade<0||s.upgrade>1||s.selected<0||s.selected>3||!Valid(s.player)||!Finite(s.clock)||s.clock<0||!Finite(s.yaw)||!Finite(s.health)||s.health<0||s.health>100||!Finite(s.energy)||s.energy<0||s.energy>100||!Finite(s.garden))throw new InvalidDataException("Guardado no válido");
+  if(s==null||s.version!=1||s.slots==null||s.slots.Length!=4||s.items==null||s.items.Count>1000||s.coins<0||s.water<0||s.water>1000||s.upgrade<0||s.upgrade>1||s.selected<0||s.selected>3||!Valid(s.player)||!Finite(s.clock)||s.clock<0||!Finite(s.yaw)||!Finite(s.health)||s.health<0||s.health>1000||!Finite(s.energy)||s.energy<0||s.energy>100||!Finite(s.garden))throw new InvalidDataException("Guardado no válido");
   foreach(var slot in s.slots)if(slot==null||!Data(slot.kind)||slot.count<0||slot.count>Data(slot.kind).stackLimit+s.upgrade*10)throw new InvalidDataException("Inventario no válido");
   foreach(var item in s.items)if(item==null||!Data(item.kind)||!Data(item.kind).prefab||!Valid(item.position)||!Valid(item.velocity)||!Finite(item.hunger)||item.hunger<0||!Finite(item.rotation.x)||!Finite(item.rotation.y)||!Finite(item.rotation.z)||!Finite(item.rotation.w))throw new InvalidDataException("Objetos no válidos");
   foreach(var item in FindObjectsByType<RanchItem>(FindObjectsSortMode.None)){item.gameObject.SetActive(false);Destroy(item.gameObject);}
   water=s.water;slots=s.slots;coins=s.coins;selected=s.selected;upgrade=s.upgrade;clock=s.clock;health=s.health;energy=s.energy;MovePlayer(s.player,s.yaw);if(garden)garden.remaining=s.garden;
   foreach(var state in s.items){var item=Spawn(state.kind,state.position,state.rotation);item.hunger=state.hunger;item.Body.linearVelocity=state.velocity;item.graceUntil=Time.time+.5f;}
-  Physics.SyncTransforms();Notify("Partida cargada");return true;
+  Physics.SyncTransforms();Loaded=true;Notify("Partida cargada");return true;
  }catch(Exception e){Notify("No se pudo cargar: el estado actual se conserva");Debug.LogWarning(e.Message);return false;}}
  void OnApplicationPause(bool paused){if(paused&&autoSave)SaveGame(false);}
  void OnApplicationQuit(){if(autoSave)SaveGame(false);}
@@ -83,7 +95,7 @@ public sealed class RanchGame : MonoBehaviour {
   var old=GUI.matrix;GUI.matrix=Matrix4x4.TRS(Vector3.zero,Quaternion.identity,new Vector3(Screen.width/1280f,Screen.height/720f,1));
   var label=new GUIStyle(GUI.skin.label){fontSize=19,normal={textColor=Color.white}};var big=new GUIStyle(label){fontSize=27,fontStyle=FontStyle.Bold};var center=new GUIStyle(label){alignment=TextAnchor.MiddleCenter,wordWrap=true};var small=new GUIStyle(label){fontSize=15};
   Panel(new Rect(18,18,200,89),new Color(.08f,.12f,.18f,.8f));GUI.Label(new Rect(30,24,180,36),"Día "+(1+Mathf.FloorToInt(clock/1440)),big);int mins=Mathf.FloorToInt(clock%1440);GUI.Label(new Rect(30,61,180,32),(mins/60).ToString("00")+":"+(mins%60).ToString("00"),label);
-  GUI.Label(new Rect(24,552,220,36),"MONEDAS  "+coins,big);Bar(new Rect(24,595,220,32),health,new Color(.95f,.17f,.3f),"VIDA",small);Bar(new Rect(24,635,220,32),energy,new Color(.05f,.7f,.95f),"ENERGÍA",small);
+  GUI.Label(new Rect(24,552,220,36),"MONEDAS  "+coins,big);Bar(new Rect(24,595,220,32),health*100/maxHealth,new Color(.95f,.17f,.3f),"VIDA",small);Bar(new Rect(24,635,220,32),energy,new Color(.05f,.7f,.95f),"ENERGÍA",small);
   for(int i=0;i<4;i++){var slot=slots[i];var r=new Rect(361+i*142,582,132,116);Panel(new Rect(r.x-3,r.y-3,r.width+6,r.height+6),i==selected?new Color(1,.78f,.2f):new Color(.35f,.42f,.49f));Panel(r,new Color(.07f,.11f,.17f,.96f));GUI.Label(new Rect(r.x+7,r.y+4,30,22),(i+1).ToString(),small);if(slot.count>0){var d=Data(slot.kind);Panel(new Rect(r.x+51,r.y+12,30,24),d.color);GUI.Label(new Rect(r.x+4,r.y+38,124,48),d.itemName,center);GUI.Label(new Rect(r.x,r.y+86,132,27),slot.count+" / "+Limit(slot.kind),center);}else GUI.Label(new Rect(r.x,r.y+40,132,45),"Vacío",center);}
   GUI.Label(new Rect(624,342,32,32),"+",center);
   Panel(new Rect(256,18,780,47),new Color(.06f,.1f,.16f,.7f));GUI.Label(new Rect(267,21,760,42),Time.time<MessageUntil?Message:"Zanahorias → slimes rosados → plorts → mercado",center);

@@ -87,7 +87,7 @@ public sealed class RanchVRControls : MonoBehaviour {
  void ResetButtons(){lastPrimary=lastSecondary=lastJump=lastSave=lastGrip=false;loadHold=0;loadDone=false;turnReady=true;verticalSpeed=0;}
  void OnDisable(){VRActive=false;Left=Right=default;SetLocomotion(false);ResetButtons();}
  void OnDestroy(){if(Instance==this)Instance=null;}
- public static void Haptic(float amplitude=.25f,float seconds=.06f){if(!Active||Instance.useSimulator)return;var device=UnityEngine.XR.InputDevices.GetDeviceAtXRNode(XRNode.RightHand);if(device.TryGetHapticCapabilities(out var cap)&&cap.supportsImpulse)device.SendHapticImpulse(0,amplitude,seconds);}
+ public static void Haptic(float amplitude=.25f,float seconds=.06f){if(!Active||Instance.useSimulator||!SlimeGameOptions.Haptics)return;var device=UnityEngine.XR.InputDevices.GetDeviceAtXRNode(XRNode.RightHand);if(device.TryGetHapticCapabilities(out var cap)&&cap.supportsImpulse)device.SendHapticImpulse(0,amplitude,seconds);}
 }
 }
 

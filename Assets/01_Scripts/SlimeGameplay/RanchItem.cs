@@ -5,11 +5,13 @@ public sealed class RanchItem : MonoBehaviour {
  public RanchItemData data;
  public float hunger;
  public float graceUntil;
+ // A slime ate this food (chickens only come back when this happens).
+ public static event System.Action<RanchItem> EatenBySlime;
  public bool Consumed {get;private set;}
  public Rigidbody Body {get;private set;}
  float lastPull=-10,nextEat;
  Vector3 home;
- void Awake(){Body=GetComponent<Rigidbody>();home=transform.position;}
+ void Awake(){Body=GetComponent<Rigidbody>();home=transform.position;if(!GetComponent<SlimeRancher.Area1.Area1KeepUpright>())gameObject.AddComponent<SlimeRancher.Area1.Area1KeepUpright>();if(!GetComponent<SlimeRancher.Area1.Area1ItemSounds>())gameObject.AddComponent<SlimeRancher.Area1.Area1ItemSounds>();}
  public void Place(Vector3 point, Quaternion rotation){transform.SetPositionAndRotation(point,rotation);Body.position=point;Body.rotation=rotation;home=point;var pink=GetComponent<PinkSlime>();if(pink)pink.SetHome(point);var chicken=GetComponent<SlimeRancher.Area1.Area1Chicken>();if(chicken)chicken.SetHome(point);}
  public bool Consume(){if(Consumed||!isActiveAndEnabled)return false;Consumed=true;gameObject.SetActive(false);Destroy(gameObject);return true;}
  public void Pull(Vector3 point,float speed){if(Consumed)return;lastPull=Time.time;var pink=GetComponent<PinkSlime>();if(pink){pink.Pull(point,speed);return;}Body.useGravity=false;Body.linearVelocity=Vector3.MoveTowards(Body.linearVelocity,(point-transform.position).normalized*speed,35*Time.fixedDeltaTime);}
@@ -30,9 +32,12 @@ public sealed class RanchItem : MonoBehaviour {
   var ray=food.transform.position-transform.position;
   foreach(var hit in Physics.RaycastAll(transform.position,ray.normalized,ray.magnitude,~0,QueryTriggerInteraction.Ignore))if(!hit.transform.IsChildOf(transform)&&!hit.transform.IsChildOf(food.transform))return false;
   if(!food.Consume())return false;
+  EatenBySlime?.Invoke(food);
+  SlimeRancher.Area1.Area1Audio.Play(b=>b.slimeComeVegetal,transform.position);
   hunger=20;
   var plort=game.Spawn(RanchItemKind.PinkPlort,transform.position+Vector3.up*.65f,Quaternion.identity);
   plort.Body.linearVelocity=Vector3.up*2;plort.graceUntil=Time.time+.5f;
+  SlimeRancher.Area1.Area1Audio.Play(b=>b.slimeSueltaPlort,transform.position,1,.35f); // right after the eating sound
   game.Notify("¡Bien alimentado! Recoge el plort rosa y véndelo.");return true;
  }
 }
