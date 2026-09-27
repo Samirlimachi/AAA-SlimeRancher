@@ -20,6 +20,8 @@ namespace SlimeRancher.Area1
                 moveProvider = GetComponentInChildren<ContinuousMoveProvider>(true);
             sprint = new InputAction("Area1 Sprint", InputActionType.Button);
             sprint.AddBinding("<XRController>{LeftHand}/primary2DAxisClick");
+            // OpenXR controllers name it thumbstickClicked; the usage matches any controller.
+            sprint.AddBinding("<XRController>{LeftHand}/{Primary2DAxisClick}");
             sprint.AddBinding("<Keyboard>/leftShift");
         }
         void OnEnable() => sprint?.Enable();

@@ -19,7 +19,8 @@ public sealed class SlimeVacuum : MonoBehaviour {
  bool requested;float nextShot;VacuumPickup pickup;
  public bool CanUse=>!pickup||pickup.IsHeld;
  RanchGame Game=>RanchGame.Instance;
- void Awake(){pickup=GetComponent<VacuumPickup>();hum=gameObject.AddComponent<AudioSource>();hum.spatialBlend=.4f;hum.volume=.12f;hum.loop=true;hum.playOnAwake=false;hum.clip=Tone(85,.5f);captureClip=Tone(660,.12f);shotClip=Tone(220,.1f);}
+ void Awake(){pickup=GetComponent<VacuumPickup>();hum=gameObject.AddComponent<AudioSource>();hum.spatialBlend=.4f;hum.volume=.12f;hum.loop=true;hum.playOnAwake=false;hum.clip=Tone(85,.5f);captureClip=Tone(660,.12f);shotClip=Tone(220,.1f);
+  var suction=SlimeRancher.Area1.Area1Audio.Pick(b=>b.aspiradoraSuccionando);if(suction!=null){Destroy(hum.clip);hum.clip=suction.clip;hum.volume=suction.volume;hum.spatialBlend=.8f;}}
  AudioClip Tone(float hz,float seconds){int n=Mathf.RoundToInt(22050*seconds);var clip=AudioClip.Create("Vacuum feedback",n,1,22050,false);var samples=new float[n];for(int i=0;i<n;i++)samples[i]=Mathf.Sin(2*Mathf.PI*hz*i/22050)*.25f*Mathf.Min(1,i/220f)*Mathf.Min(1,(n-i)/220f);clip.SetData(samples,0);return clip;}
  void Update(){
   if(!Game)return;
@@ -60,7 +61,7 @@ public sealed class SlimeVacuum : MonoBehaviour {
   foreach(var col in item.GetComponentsInChildren<Collider>())foreach(var own in playerRoot.GetComponentsInChildren<Collider>())Physics.IgnoreCollision(col,own);
   // Restore collisions after the projectile has cleared the player's body.
   StartCoroutine(RestorePlayerCollision(item));
-  slot.count--;hum.PlayOneShot(shotClip,.9f);RanchVRControls.Haptic(.4f);return true;
+  slot.count--;if(SlimeRancher.Area1.Area1Audio.Pick(b=>b.aspiradoraBota)!=null)SlimeRancher.Area1.Area1Audio.Play(b=>b.aspiradoraBota,muzzle.position);else hum.PlayOneShot(shotClip,.9f);RanchVRControls.Haptic(.4f);return true;
  }
  System.Collections.IEnumerator RestorePlayerCollision(RanchItem item){yield return new WaitForSeconds(.5f);if(item)foreach(var col in item.GetComponentsInChildren<Collider>())foreach(var own in playerRoot.GetComponentsInChildren<Collider>())Physics.IgnoreCollision(col,own,false);}
  void FixedUpdate(){
@@ -68,13 +69,14 @@ public sealed class SlimeVacuum : MonoBehaviour {
   int n=Physics.OverlapSphereNonAlloc(muzzle.position,data.suctionRange,candidates,~0,QueryTriggerInteraction.Ignore);float best=float.MaxValue;
   for(int i=0;i<n;i++){var item=candidates[i].GetComponentInParent<RanchItem>();if(!CanPull(item))continue;float score=Vector3.Distance(muzzle.position,item.transform.position);if(score<best){best=score;Target=item;}}
   if(!Target)return;CurrentTarget=Target.GetComponent<PinkSlime>();
-  if(best<.48f){if(Game.Collect(Target)){hum.PlayOneShot(captureClip,.9f);RanchVRControls.Haptic();}Target=null;CurrentTarget=null;}else Target.Pull(muzzle.position,data.pullSpeed);
+  if(best<.48f){if(Game.Collect(Target)){hum.PlayOneShot(captureClip,.108f/Mathf.Max(hum.volume,.01f)); /* same loudness as before, whatever the loop volume */RanchVRControls.Haptic();}Target=null;CurrentTarget=null;}else Target.Pull(muzzle.position,data.pullSpeed);
  }
  void LateUpdate(){if(inventoryText){inventoryText.GetComponent<Renderer>().enabled=CanUse&&(RanchVRControls.Active||BeatrixVRBody.Tracked(XRNode.Head));inventoryText.transform.localScale=Vector3.one*.0022f;var camera=Camera.main;if(camera)inventoryText.transform.rotation=camera.transform.rotation;}
   if(!stream)return;stream.enabled=IsSuctioning;if(stream.enabled){stream.SetPosition(0,muzzle.position);stream.SetPosition(1,Target?Target.transform.position:muzzle.position+muzzle.forward);stream.startWidth=.025f;stream.endWidth=.09f;}}
  public void ResetDemo(){SetSuction(false);if(Game)foreach(var s in Game.slots)s.count=0;if(demoSlimes!=null)foreach(var s in demoSlimes)if(s)s.ResetSlime();}
  void OnDisable(){SetSuction(false);if(stream)stream.enabled=false;if(hum)hum.Stop();}
- void OnDestroy(){if(hum&&hum.clip)Destroy(hum.clip);if(captureClip)Destroy(captureClip);if(shotClip)Destroy(shotClip);}
+ // Only the generated tones are destroyed; clips from the sound bank are project assets.
+ void OnDestroy(){if(hum&&hum.clip&&hum.clip.name=="Vacuum feedback")Destroy(hum.clip);if(captureClip)Destroy(captureClip);if(shotClip)Destroy(shotClip);}
 }
 }
 

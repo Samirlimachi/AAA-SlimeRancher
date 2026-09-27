@@ -49,7 +49,8 @@ namespace SlimeRancher.Area1
                     var kind = action == Area1StructureAction.GeneratePinkPlort ? RanchItemKind.PinkPlort : RanchItemKind.Carrot;
                     if (action == Area1StructureAction.GenerateWater)
                     {
-                        game.water = Mathf.Min(30, game.water + 1);
+                        var tank = FindAnyObjectByType<Area1WaterVacuum>();
+                        game.water = Mathf.Min(tank ? tank.capacity : 30, game.water + 1);
                         continue;
                     }
                     if (action != Area1StructureAction.MessageOnly && !game.Add(kind)) break;

@@ -1,6 +1,6 @@
 using UnityEngine;
 namespace SlimeRancherVR {
-public enum RanchItemKind { PinkSlime, Carrot, PinkPlort, Chicken, ElderChicken, BlueSlime, EnemySlime }
+public enum RanchItemKind { PinkSlime, Carrot, PinkPlort, Chicken, ElderChicken, BlueSlime, EnemySlime, Heart }
 [CreateAssetMenu(menuName="Slime Rancher/Objeto del rancho")]
 public sealed class RanchItemData : ScriptableObject {
  public RanchItemKind kind;

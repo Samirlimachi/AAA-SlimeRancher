@@ -17,6 +17,13 @@ namespace SlimeRancher.Area1
         readonly Transform[] models = new Transform[4];
         readonly RanchItemData[] shown = new RanchItemData[4];
         TMP_Text hintLabel;
+        CanvasGroup group;
+        float visibility = 1;
+        [Header("Transparencia")]
+        [Tooltip("Opacidad normal del panel.")]
+        [Range(.2f, 1)] public float normalAlpha = .85f;
+        [Tooltip("Opacidad mientras apuntas con la aspiradora.")]
+        [Range(0, 1)] public float aimingAlpha = .12f;
 
         RectTransform Rect(string title, Transform parent, Vector2 size, Vector2 position)
         {
@@ -42,13 +49,15 @@ namespace SlimeRancher.Area1
             water = GetComponent<Area1WaterVacuum>();
             panel = Rect("Inventario de la aspiradora", transform, new Vector2(630, 245), Vector2.zero);
             var canvas = panel.gameObject.AddComponent<Canvas>(); canvas.renderMode = RenderMode.WorldSpace;
-            Box("Fondo", panel, new Vector2(630,245), Vector2.zero, new Color(.025f,.045f,.065f,.97f));
+            group = panel.gameObject.AddComponent<CanvasGroup>();
+            // See-through glass look: the world stays visible behind the inventory.
+            Box("Fondo", panel, new Vector2(630,245), Vector2.zero, new Color(.025f,.045f,.065f,.45f));
             Text("Titulo",panel,new Vector2(610,30),new Vector2(0,102),22).text="INVENTARIO";
             for(int i=0;i<5;i++)
             {
                 var card=Rect("Ranura "+(i+1),panel,new Vector2(112,150),new Vector2(-240+i*120,8));
                 borders[i]=Box("Borde",card,new Vector2(112,150),Vector2.zero,Color.white);
-                Box("Interior",card,new Vector2(106,144),Vector2.zero,i==4?new Color(.025f,.19f,.27f):new Color(.055f,.085f,.12f));
+                Box("Interior",card,new Vector2(106,144),Vector2.zero,i==4?new Color(.025f,.19f,.27f,.6f):new Color(.055f,.085f,.12f,.6f));
                 Text("Numero",card,new Vector2(28,24),new Vector2(-37,59),16).text=(i+1).ToString();
                 labels[i]=Text("Contenido",card,new Vector2(102,70),new Vector2(0,-38),i==4?19:17);
                 if(i<4)
@@ -104,11 +113,32 @@ namespace SlimeRancher.Area1
             // Item prefabs face away from the world-space inventory camera by default.
             fit.localRotation=Quaternion.Euler(0,180,0);
         }
+        // Aiming = the nozzle points where the eyes look and the panel sits in the middle of the view.
+        // Then the panel almost disappears so it never blocks the shot; lowering the gun to read it brings it back.
+        void FadeWhileAiming(Transform eyes)
+        {
+            bool aiming = false;
+            if (vacuum && vacuum.muzzle)
+            {
+                float gunToGaze = Vector3.Angle(vacuum.muzzle.forward, eyes.forward);
+                float panelToGaze = Vector3.Angle(eyes.forward, panel.position - eyes.position);
+                aiming = (gunToGaze < 30 && panelToGaze < 35) || vacuum.IsSuctioning || (water && water.IsFilling);
+            }
+            float target = aiming ? aimingAlpha : normalAlpha;
+            visibility = Mathf.MoveTowards(visibility, target, Time.deltaTime * 4);
+            group.alpha = visibility;
+            // The 3D miniatures are meshes, not UI: hide them when the panel is faded out.
+            bool showModels = visibility > .45f;
+            foreach (var model in models)
+                if (model && model.gameObject.activeSelf != showModels) model.gameObject.SetActive(showModels);
+        }
+
         void LateUpdate()
         {
             var game=RanchGame.Instance; var camera=Camera.main;
             if(!game || !camera) return;
             panel.gameObject.SetActive(true);
+            FadeWhileAiming(camera.transform);
             // Fixed physical size, above the gun, facing the headset for readability.
             panel.position=transform.position+Vector3.up*.24f;
             panel.rotation=Quaternion.LookRotation(panel.position-camera.transform.position,camera.transform.up);

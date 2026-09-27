@@ -1,20 +1,59 @@
+using System.Collections.Generic;
 using UnityEngine;
 using SlimeRancherVR;
 
 namespace SlimeRancher.Area1
 {
+    // Limited respawning so the ranch is not an endless farm:
+    // - Pink slimes: a missing slime comes back slowly, and only while there are fewer than
+    //   `maxPinkSlimes` pink slimes in the whole area.
+    // - Chickens: never respawn on their own. Only the chickens already in the area exist at the start;
+    //   each chicken a slime eats comes back later at a random point of its kind.
     public sealed class Area1RespawnPoint : MonoBehaviour
     {
         public RanchItemKind kind = RanchItemKind.PinkSlime;
-        public float respawnDelay = 8f;
         public float spawnRadius = .35f;
         public float claimRadius = 1.25f;
+
+        [Header("Límites de aparición")]
+        [Tooltip("Máximo de slimes rosados vivos en toda el área.")]
+        public int maxPinkSlimes = 6;
+        [Tooltip("Segundos hasta que vuelve un slime rosado que falta.")]
+        public float slimeRespawnDelay = 120f;
+        [Tooltip("Segundos hasta que vuelve un pollo que se comió un slime.")]
+        public float chickenRespawnDelay = 45f;
 
         public RanchItem Current { get; private set; }
         public int SpawnCount { get; private set; }
 
+        static readonly List<Area1RespawnPoint> points = new List<Area1RespawnPoint>();
+        readonly List<float> eatenRespawns = new List<float>();
         bool initialized;
         float missingSince = -1f;
+
+        bool IsChicken => kind == RanchItemKind.Chicken || kind == RanchItemKind.ElderChicken;
+
+        void OnEnable()
+        {
+            points.Add(this);
+            if (points.Count == 1) RanchItem.EatenBySlime += OnEaten;
+        }
+
+        void OnDisable()
+        {
+            points.Remove(this);
+            if (points.Count == 0) RanchItem.EatenBySlime -= OnEaten;
+        }
+
+        // A slime ate a chicken: one random point of that kind brings a new one back later.
+        static void OnEaten(RanchItem food)
+        {
+            if (!food || !food.data) return;
+            var candidates = points.FindAll(p => p.kind == food.data.kind && p.IsChicken);
+            if (candidates.Count == 0) return;
+            var point = candidates[Random.Range(0, candidates.Count)];
+            point.eatenRespawns.Add(Time.time + point.chickenRespawnDelay);
+        }
 
         void Start()
         {
@@ -26,7 +65,8 @@ namespace SlimeRancher.Area1
         {
             Current = FindNearby();
             initialized = true;
-            if (!Current) Spawn();
+            // Chickens: only the ones already placed in the area at the start.
+            if (!Current && !IsChicken && CanSpawnPinkSlime()) Spawn();
         }
 
         RanchItem FindNearby()
@@ -44,16 +84,36 @@ namespace SlimeRancher.Area1
             return nearest;
         }
 
+        bool CanSpawnPinkSlime()
+        {
+            if (kind != RanchItemKind.PinkSlime) return true;
+            int alive = 0;
+            foreach (var item in FindObjectsByType<RanchItem>())
+                if (item && !item.Consumed && item.data && item.data.kind == RanchItemKind.PinkSlime && item.gameObject.activeInHierarchy) alive++;
+            return alive < maxPinkSlimes;
+        }
+
         void Update()
         {
             if (!initialized) return;
+            if (IsChicken)
+            {
+                if (eatenRespawns.Count > 0 && Time.time >= eatenRespawns[0])
+                {
+                    eatenRespawns.RemoveAt(0);
+                    Spawn();
+                }
+                return;
+            }
             if (Current && !Current.Consumed && Current.gameObject.activeInHierarchy)
             {
                 missingSince = -1f;
                 return;
             }
             if (missingSince < 0) missingSince = Time.time;
-            if (Time.time - missingSince >= respawnDelay) Spawn();
+            if (Time.time - missingSince < slimeRespawnDelay) return;
+            if (CanSpawnPinkSlime()) Spawn();
+            else missingSince = Time.time; // area is full: check again after another delay
         }
 
         void Spawn()
@@ -67,6 +127,8 @@ namespace SlimeRancher.Area1
             Current.graceUntil = Time.time + 1f;
             SpawnCount++;
             missingSince = -1f;
+            Area1Effects.PlortSold(point + Vector3.up * .2f); // little sparkle so the arrival is noticed
+            if (IsChicken) Area1Audio.Play(b => b.spawnPollo, point);
         }
 
         void OnDrawGizmos()

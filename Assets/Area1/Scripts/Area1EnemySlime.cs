@@ -16,6 +16,9 @@ namespace SlimeRancher.Area1
         RanchItem item;
         PinkSlime target;
         float nextSearch, nextAttack;
+        // Getting unstuck: progress check and a temporary sidestep around the obstacle.
+        Vector3 progressPoint, sidestep;
+        float progressCheckAt, sidestepUntil;
         readonly Dictionary<RanchItem, int> damage = new Dictionary<RanchItem, int>();
 
         void Awake()
@@ -50,12 +53,36 @@ namespace SlimeRancher.Area1
         {
             direction.y = 0;
             if (direction.sqrMagnitude < .001f) return;
+            direction = Steer(direction);
             Vector3 desired = direction.normalized * moveSpeed;
             body.linearVelocity = new Vector3(
                 Mathf.MoveTowards(body.linearVelocity.x, desired.x, 8f * Time.fixedDeltaTime),
                 body.linearVelocity.y,
                 Mathf.MoveTowards(body.linearVelocity.z, desired.z, 8f * Time.fixedDeltaTime));
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(direction), 8f * Time.fixedDeltaTime);
+        }
+
+        // Go around walls, rocks and structures instead of pushing into them; if no progress is made
+        // for a while, hop and slide sideways for a moment to get free.
+        Vector3 Steer(Vector3 wanted)
+        {
+            if (Time.time < sidestepUntil) return sidestep;
+            var direction = Area1Steering.FreeDirection(body.position + Vector3.up * .1f, wanted, .22f, 1.1f, transform);
+            if (Time.time >= progressCheckAt)
+            {
+                var moved = body.position - progressPoint;
+                moved.y = 0;
+                if (moved.magnitude < .25f && progressCheckAt > 0)
+                {
+                    sidestep = Quaternion.Euler(0, Random.value < .5f ? 90 : -90, 0) * wanted.normalized;
+                    sidestepUntil = Time.time + .9f;
+                    if (Physics.Raycast(body.position, Vector3.down, .45f, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore))
+                        body.AddForce(Vector3.up * 3.5f, ForceMode.VelocityChange);
+                }
+                progressPoint = body.position;
+                progressCheckAt = Time.time + .8f;
+            }
+            return direction;
         }
 
         void FixedUpdate()
@@ -69,7 +96,7 @@ namespace SlimeRancher.Area1
             var game = RanchGame.Instance;
             if (game && game.player)
             {
-                Vector3 playerDirection = game.player.position - transform.position;
+                Vector3 playerDirection = game.PlayerPosition - transform.position;
                 playerDirection.y = 0;
                 float playerDistance = playerDirection.magnitude;
                 float slimeDistance = target ? Vector3.Distance(transform.position, target.transform.position) : float.MaxValue;
@@ -79,7 +106,9 @@ namespace SlimeRancher.Area1
                     else if (Time.time >= nextAttack)
                     {
                         nextAttack = Time.time + attackCooldown;
+                        float before = game.health;
                         game.Damage(10);
+                        if (game.health < before) Area1Effects.PlayerHit(transform.position);
                         game.Notify("¡Un slime enemigo te atacó! Usa agua para neutralizarlo.");
                     }
                     return;
@@ -99,6 +128,8 @@ namespace SlimeRancher.Area1
             var victim = target.GetComponent<RanchItem>();
             if (!victim || victim.Consumed) return;
             victim.Body.AddForce(direction.normalized * .45f + Vector3.up * .25f, ForceMode.Impulse);
+            Area1Effects.HitTarget(victim.gameObject, transform.position);
+            Area1Audio.Play(b => b.ataqueSlime, transform.position);
             damage.TryGetValue(victim, out int hits);
             hits++;
             damage[victim] = hits;
@@ -116,13 +147,16 @@ namespace SlimeRancher.Area1
             if (!game || !game.player || !item.enabled || item.Consumed) return;
             if (collision.transform.IsChildOf(game.player))
             {
+                float before = game.health;
                 game.Damage(10);
+                if (game.health < before) Area1Effects.PlayerHit(transform.position);
                 game.Notify("¡Slime enemigo! Usa agua para neutralizarlo.");
             }
         }
-        public void HitByWater()
+        public void HitByWater(int damage = 1)
         {
-            if (--waterHits > 0) return;
+            waterHits -= Mathf.Max(1, damage);
+            if (waterHits > 0) return;
             GetComponent<RanchItem>().Consume();
             if (RanchGame.Instance) RanchGame.Instance.Notify("Slime enemigo neutralizado.");
         }
