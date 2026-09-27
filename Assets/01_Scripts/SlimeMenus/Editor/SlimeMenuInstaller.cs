@@ -9,8 +9,8 @@ namespace SlimeRancherVR.Editor
     [InitializeOnLoad]
     public static class SlimeMenuInstaller
     {
-        const string ThemePath = "Assets/01_Scripts/SlimeMenus/SlimeMenuTheme.asset";
-        const string LogoPath = "Assets/Menus/Slime_Rancher_logo.png";
+        const string ThemePath = "Assets/03_SO/Menus/SlimeMenuTheme.asset";
+        const string LogoPath = "Assets/07_UI/Slime_Rancher_logo.png";
 
         static SlimeMenuInstaller() => EditorApplication.delayCall += ConfigureLogo;
 
