@@ -19,3 +19,4 @@ MonoBehaviour:
   stackLimit: 20
   saleValue: 0
   radius: 0.18
+  plortsWhenEaten: 1

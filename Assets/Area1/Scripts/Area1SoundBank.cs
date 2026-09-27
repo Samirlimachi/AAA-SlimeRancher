@@ -44,8 +44,16 @@ namespace SlimeRancher.Area1
         public Sound cacareoPollo2 = new Sound { volume = .7f };
         public Sound cacareoPollo3 = new Sound { volume = .7f };
 
+        [Header("Música")]
+        [Tooltip("Música de fondo de AREA1 (se repite). Si está vacía se usa 'Ambiente Area1'.")]
+        public Sound musicaFondo = new Sound { volume = .5f };
+        [Tooltip("Música mientras hay una oleada en curso (se repite).")]
+        public Sound musicaOleada = new Sound { volume = .55f };
+        [Tooltip("Música del menú de inicio (se repite).")]
+        public Sound musicaMenu = new Sound { volume = .5f };
+
         [Header("Ambiente")]
-        [Tooltip("Música o sonido de fondo en bucle durante AREA1.")]
+        [Tooltip("Sonido de fondo de respaldo si no hay 'Música de fondo'.")]
         public Sound ambienteArea1 = new Sound { volume = .35f };
 
         [Header("Jugador")]
@@ -57,6 +65,10 @@ namespace SlimeRancher.Area1
         public Sound jugadorAterrizaje = new Sound();
         [Tooltip("Un enemigo te hace daño.")]
         public Sound jugadorRecibeDanio = new Sound();
+
+        [Header("Tiendas")]
+        [Tooltip("Al completar una compra: comida, corazón, mejora o desbloqueo de nivel.")]
+        public Sound compra = new Sound();
 
         [Header("Menú y oleadas")]
         [Tooltip("Cualquier botón del menú de inicio o de pausa.")]

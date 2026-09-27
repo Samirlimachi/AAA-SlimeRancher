@@ -51,6 +51,15 @@ MonoBehaviour:
   cacareoPollo3:
     clip: {fileID: 8300000, guid: ad14177d3e560a84a890bf3d1e188b2d, type: 3}
     volume: 0.7
+  musicaFondo:
+    clip: {fileID: 8300000, guid: b1e7ec3bd68026d408ddd6667855cc39, type: 3}
+    volume: 0.5
+  musicaOleada:
+    clip: {fileID: 8300000, guid: a08bbc1874893f8478a61fc18d892b3b, type: 3}
+    volume: 0.55
+  musicaMenu:
+    clip: {fileID: 8300000, guid: 9454e584021ce0a4c9154f7c5c9dc8dc, type: 3}
+    volume: 0.5
   ambienteArea1:
     clip: {fileID: 8300000, guid: da65da1ff20e36c42937b0b2d238a11d, type: 3}
     volume: 0.35
@@ -65,6 +74,9 @@ MonoBehaviour:
     volume: 1
   jugadorRecibeDanio:
     clip: {fileID: 8300000, guid: 71cfc231439710245bb4802f306f038f, type: 3}
+    volume: 1
+  compra:
+    clip: {fileID: 8300000, guid: a305887d462fa4c46ae56e9ea8c558e3, type: 3}
     volume: 1
   clickMenu:
     clip: {fileID: 8300000, guid: b6b171f199faec54ca960284c0fef7f7, type: 3}

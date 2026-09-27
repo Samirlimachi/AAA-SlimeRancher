@@ -13,6 +13,8 @@ namespace SlimeRancherVR
         [Header("Scene flow")]
         [SerializeField] string gameplayScene = "AREA1";
         [SerializeField] string startScene = "MAIN_MENU";
+        [Tooltip("Archivo de guardado de la escena de juego (RanchGame.saveName).")]
+        [SerializeField] string saveFileName = "AREA1_rancho_v1.json";
         [SerializeField] SlimeMenuTheme theme;
         [SerializeField] bool showStartMenu = true;
 
@@ -35,11 +37,13 @@ namespace SlimeRancherVR
         [SerializeField, Min(0.1f)] float controlsLineSpacing = 1.35f;
 
         Canvas canvas;
-        GameObject startPanel, pausePanel, controlsPanel, optionsPanel, modalDimmer;
+        GameObject startPanel, pausePanel, controlsPanel, optionsPanel, confirmPanel, modalDimmer;
+        Text volumeLabel, musicLabel;
         Text pauseTitle;
         Toggle hapticsToggle, comfortToggle;
         bool paused;
         bool menuButtonWasPressed;
+        float startShownAt;
         float nextMenuCheck;
         static Sprite roundedButtonSprite;
         static readonly InputFeatureUsage<bool> MenuButton = new InputFeatureUsage<bool>("Menu Button");
@@ -48,13 +52,18 @@ namespace SlimeRancherVR
 
         void Awake()
         {
+            PrepareStartScene();
             CreateInterface();
             bool isStartScene = SceneManager.GetActiveScene().name == startScene;
             SetStartVisible(showStartMenu && isStartScene);
             SetPauseVisible(false);
         }
 
-        void Start() => SlimeGameOptions.Apply();
+        void Start()
+        {
+            SlimeGameOptions.Apply();
+            StartMenuMusic();
+        }
 
         void Update()
         {
@@ -74,10 +83,51 @@ namespace SlimeRancherVR
             menuButtonWasPressed = pressed;
         }
 
+        // Main menu music (SonidosJuego > "Musica Menu"): loops and fades in, only in the start scene.
+        AudioSource menuMusic;
+        float menuMusicVolume;
+
+        void StartMenuMusic()
+        {
+            if (SceneManager.GetActiveScene().name != startScene) return;
+            var music = SlimeRancher.Area1.Area1Audio.Pick(b => b.musicaMenu);
+            if (music == null) return;
+            menuMusic = gameObject.AddComponent<AudioSource>();
+            menuMusic.clip = music.clip;
+            menuMusic.loop = true;
+            menuMusic.spatialBlend = 0;
+            menuMusic.priority = 0;
+            menuMusic.volume = 0;
+            menuMusicVolume = music.volume;
+            if (music.clip.loadState == AudioDataLoadState.Unloaded) music.clip.LoadAudioData();
+            menuMusic.Play();
+        }
+
         void LateUpdate()
         {
-            if (SceneManager.GetActiveScene().name == startScene && startPanel && startPanel.activeSelf)
+            // Fade the menu music in (unscaled: the start menu pauses time).
+            if (menuMusic)
+                menuMusic.volume = Mathf.MoveTowards(menuMusic.volume, menuMusicVolume * SlimeGameOptions.MusicVolume, Time.unscaledDeltaTime * Mathf.Max(menuMusicVolume, .1f) / 2);
+            // Settle in front of the player once tracking starts, then stay still so you can look around
+            // and aim at the buttons.
+            if (SceneManager.GetActiveScene().name == startScene && startPanel && startPanel.activeSelf && Time.unscaledTime < startShownAt + 1.5f)
                 PositionInFrontOfPlayer();
+        }
+
+        // MAIN_MENU decor was built without colliders: chickens and slimes fell through the floor forever
+        // (the old menu froze time, which hid it). Give the ground and the pond bed collision, and hide the
+        // controller help labels ("UI Press", "Grab"...) like in AREA1.
+        void PrepareStartScene()
+        {
+            if (SceneManager.GetActiveScene().name != startScene) return;
+            foreach (var name in new[] { "Suelo de pasto", "Lecho de piedra" })
+            {
+                var ground = GameObject.Find(name);
+                if (ground && !ground.GetComponent<Collider>() && ground.GetComponent<MeshFilter>())
+                    ground.AddComponent<MeshCollider>();
+            }
+            foreach (var callouts in FindObjectsByType<Transform>(FindObjectsInactive.Include))
+                if (callouts.name.StartsWith("Affordance Callouts")) callouts.gameObject.SetActive(false);
         }
 
         void CreateInterface()
@@ -95,21 +145,19 @@ namespace SlimeRancherVR
             root.GetComponent<RectTransform>().sizeDelta = new Vector2(1000, 1300);
 
             startPanel = BuildPanel("Menu de inicio", "EXPLORA. ATRAPA. CREA TU RANCHO.");
-            AddButton(startPanel.transform, "COMENZAR AVENTURA", 120, StartGame, true);
+            AddButton(startPanel.transform, "NUEVA PARTIDA", 120, NewGame, true);
             AddButton(startPanel.transform, "CONTINUAR PARTIDA", 45, ContinueGame, false);
             AddButton(startPanel.transform, "CONTROLES", -30, OpenControls, false);
             AddButton(startPanel.transform, "OPCIONES", -75, OpenOptions, false);
-            AddButton(startPanel.transform, "CERRAR MENU", -120, CloseStartMenu, false);
             AddButton(startPanel.transform, "SALIR", -165, QuitGame, false);
 
             pausePanel = BuildPanel("Menu de pausa", "La aventura queda en pausa");
             pauseTitle = pausePanel.transform.Find("Title").GetComponent<Text>();
             AddButton(pausePanel.transform, "CONTINUAR", 120, ResumeGame, true);
             AddButton(pausePanel.transform, "GUARDAR PARTIDA", 45, SaveGame, false);
-            AddButton(pausePanel.transform, "CARGAR PARTIDA", -30, LoadGame, false);
             AddButton(pausePanel.transform, "CONTROLES", -75, OpenControls, false);
             AddButton(pausePanel.transform, "OPCIONES", -120, OpenOptions, false);
-            AddButton(pausePanel.transform, "VOLVER AL INICIO", -165, ReturnToStart, false);
+            AddButton(pausePanel.transform, "VOLVER AL MENU", -165, ReturnToStart, false);
 
             modalDimmer = new GameObject("Oscurecer menus", typeof(RectTransform), typeof(Image));
             modalDimmer.transform.SetParent(canvas.transform, false);
@@ -120,28 +168,56 @@ namespace SlimeRancherVR
             dimmerRect.offsetMax = Vector2.zero;
             modalDimmer.GetComponent<Image>().color = new Color(0, 0, 0, .72f);
 
-            controlsPanel = BuildPanel("Panel de controles", "CONTROLES VR", 1100, false, controlsTextScale);
+            controlsPanel = BuildPanel("Panel de controles", "CONTROLES VR", 1400, false, controlsTextScale);
             var controlsLayout = controlsPanel.GetComponent<VerticalLayoutGroup>();
-            controlsLayout.padding.top = 150;
-            var instructions = AddText(controlsPanel.transform, "Instructions", "AGARRAR\nGrip del mando\n\nASPIRAR\nGatillo de la mano que sostiene la aspiradora\n\nLANZAR O DISPARAR AGUA\nGatillo de la otra mano\n\nMOVERSE Y GIRAR\nJoystick izquierdo y derecho\n\nCAMBIAR DEPOSITO\nB del mando derecho   |   X selecciona agua", controlsFontSize, TextAnchor.UpperCenter, 800, controlsTextScale, controlsLineSpacing);
+            controlsLayout.padding.top = 60;
+            var instructions = AddText(controlsPanel.transform, "Instructions", "<color=#FFC94A><b>AGARRAR / SOLTAR ASPIRADORA</b></color>\nGrip: una vez agarra, otra vez suelta\n<color=#FFC94A><b>AGARRAR OBJETOS</b></color>\nMantén el Grip\n<color=#FFC94A><b>ASPIRAR</b></color>\nGatillo de la mano con la aspiradora\n<color=#FFC94A><b>LANZAR OBJETO</b></color>\nGatillo de la otra mano\n<color=#FFC94A><b>AGUA</b></color>\nAspira apuntando al estanque  |  ranura 5 + gatillo dispara\n<color=#FFC94A><b>CAMBIAR RANURA</b></color>\nA siguiente  |  B anterior\n<color=#FFC94A><b>MOVERSE / CORRER</b></color>\nJoystick izquierdo  |  húndelo para correr\n<color=#FFC94A><b>GIRAR / TELETRANSPORTE</b></color>\nJoystick derecho a los lados  |  hacia adelante\n<color=#FFC94A><b>SALTAR</b></color>\nA (mando derecho)\n<color=#FFC94A><b>TIENDAS Y TABLERO</b></color>\nApunta al botón y presiona Grip\n<color=#FFC94A><b>CURARTE</b></color>\nPasa por encima de un corazón\n<color=#FFC94A><b>MENÚ</b></color>\nBotón de tres rayas del mando izquierdo", controlsFontSize, TextAnchor.UpperCenter, 800, controlsTextScale, controlsLineSpacing);
             var instructionsRect = instructions.rectTransform;
             instructionsRect.anchorMin = new Vector2(.5f, .5f);
             instructionsRect.anchorMax = new Vector2(.5f, .5f);
             instructionsRect.pivot = new Vector2(.5f, .5f);
-            instructionsRect.anchoredPosition = new Vector2(0, -40);
-            instructionsRect.sizeDelta = new Vector2(560, 800);
-            instructions.transform.localScale = Vector3.one * 10f;
+            // The list fits in a fixed box between the title and CERRAR (shrinks the font if needed).
+            // Menu texts are drawn small and scaled up; at x9 the list is half the old size and the box
+            // (in the text's own units) covers the panel between the title and CERRAR.
+            const float listScale = 9f;
+            instructionsRect.anchoredPosition = new Vector2(0, -10);
+            instructionsRect.sizeDelta = new Vector2(667, 1030);
+            instructions.transform.localScale = Vector3.one * listScale;
+            instructions.fontSize = 20;
+            instructions.lineSpacing = 1.05f;
+            instructions.horizontalOverflow = HorizontalWrapMode.Wrap;
+            instructions.verticalOverflow = VerticalWrapMode.Truncate;
+            instructions.resizeTextForBestFit = true;
+            instructions.resizeTextMinSize = 8;
+            instructions.resizeTextMaxSize = 20;
             Destroy(instructions.GetComponent<LayoutElement>());
             AddButton(controlsPanel.transform, "CERRAR", -1, CloseModal, false);
+            // CERRAR sits at the bottom of the panel, out of the list's way.
+            var closeButton = (RectTransform)controlsPanel.transform.Find("CERRAR");
+            closeButton.GetComponent<LayoutElement>().ignoreLayout = true;
+            closeButton.anchorMin = closeButton.anchorMax = new Vector2(.5f, 0);
+            closeButton.pivot = new Vector2(.5f, .5f);
+            closeButton.anchoredPosition = new Vector2(0, 95);
+            closeButton.sizeDelta = new Vector2(520, 120);
 
-            optionsPanel = BuildPanel("Panel de opciones", "OPCIONES DEL JUEGO", 900, false, controlsTextScale);
+            optionsPanel = BuildPanel("Panel de opciones", "OPCIONES DEL JUEGO", 1250, false, controlsTextScale);
             hapticsToggle = AddToggle(optionsPanel.transform, "VIBRACION DE LOS MANDOS", SlimeGameOptions.Haptics);
             comfortToggle = AddToggle(optionsPanel.transform, "MODO CONFORT", SlimeGameOptions.SmoothTurn);
-            AddText(optionsPanel.transform, "QualityInfo", "El modo confort activa el giro suave para evitar giros bruscos.", hintFontSize, TextAnchor.MiddleCenter, 120);
+            AddButton(optionsPanel.transform, "VOLUMEN GENERAL", -1, CycleVolume, false);
+            volumeLabel = optionsPanel.transform.Find("VOLUMEN GENERAL/Label").GetComponent<Text>();
+            AddButton(optionsPanel.transform, "MUSICA", -1, CycleMusic, false);
+            musicLabel = optionsPanel.transform.Find("MUSICA/Label").GetComponent<Text>();
+            RefreshVolumeLabels();
+            AddText(optionsPanel.transform, "QualityInfo", "El modo confort activa el giro suave para evitar giros bruscos.\nPulsa el volumen para bajarlo; despues de 0% vuelve a 100%.", hintFontSize, TextAnchor.MiddleCenter, 120);
             AddButton(optionsPanel.transform, "CERRAR", -1, CloseModal, false);
+            confirmPanel = BuildPanel("Panel de confirmacion", "¿EMPEZAR UNA NUEVA PARTIDA?", 900, false, controlsTextScale);
+            AddText(confirmPanel.transform, "ConfirmInfo", "Se borrara tu partida guardada,\ntus mejoras y tus oleadas completadas.", hintFontSize, TextAnchor.MiddleCenter, 160);
+            AddButton(confirmPanel.transform, "SI, NUEVA PARTIDA", -1, ConfirmNewGame, true);
+            AddButton(confirmPanel.transform, "NO, VOLVER", -1, CloseModal, false);
             modalDimmer.transform.SetAsLastSibling();
             controlsPanel.transform.SetAsLastSibling();
             optionsPanel.transform.SetAsLastSibling();
+            confirmPanel.transform.SetAsLastSibling();
             SetModalVisible(false, null);
         }
 
@@ -322,12 +398,15 @@ namespace SlimeRancherVR
             if (!startPanel) return;
             if (visible) SlimeMenuButtonAudio.PlayOpen();
             startPanel.SetActive(visible);
+            if (visible) RefreshContinue();
+            // The start scene has no gameplay to pause, and a paused clock freezes the XR simulator's head
+            // (mouse look) on PC. Keep time running here.
+            Time.timeScale = 1;
             if (visible)
             {
-                Time.timeScale = 0;
+                startShownAt = Time.unscaledTime;
                 PositionInFrontOfPlayer();
             }
-            else Time.timeScale = 1;
         }
         void SetPauseVisible(bool visible)
         {
@@ -377,6 +456,7 @@ namespace SlimeRancherVR
             if (modalDimmer) modalDimmer.SetActive(visible);
             if (controlsPanel) controlsPanel.SetActive(visible && panel == controlsPanel);
             if (optionsPanel) optionsPanel.SetActive(visible && panel == optionsPanel);
+            if (confirmPanel) confirmPanel.SetActive(visible && panel == confirmPanel);
             if (visible && panel)
             {
                 panel.transform.SetAsLastSibling();
@@ -387,11 +467,83 @@ namespace SlimeRancherVR
         public void PauseGame() { paused = true; Time.timeScale = 0; SetPauseVisible(true); }
         public void ResumeGame() { CloseModal(); paused = false; Time.timeScale = 1; SetPauseVisible(false); }
         public void StartGame() { CloseModal(); Time.timeScale = 1; SceneManager.LoadScene(gameplayScene); }
-        public void ContinueGame() { RanchGame.LoadRequested = true; StartGame(); }
+        public void ContinueGame()
+        {
+            if (!RanchGame.SaveExists(saveFileName)) { RefreshContinue(); return; }
+            RanchGame.LoadRequested = true;
+            StartGame();
+        }
+
+        // New game: ask first if there is anything to lose, then start clean.
+        public void NewGame()
+        {
+            if (HasProgress()) SetModalVisible(true, confirmPanel);
+            else ConfirmNewGame();
+        }
+
+        public void ConfirmNewGame()
+        {
+            RanchGame.DeleteSave(saveFileName);
+            foreach (var key in ProgressKeys) PlayerPrefs.DeleteKey(key);
+            PlayerPrefs.Save();
+            RanchGame.LoadRequested = false;
+            StartGame();
+        }
+
+        // Permanent AREA1 progress kept outside the save file (waves and upgrades).
+        static readonly string[] ProgressKeys =
+        {
+            SlimeRancher.Area1.Area1WaveBoard.CompletedKey, SlimeRancher.Area1.Area1WaveBoard.PurchasedKey,
+            SlimeRancher.Area1.Area1UpgradeShop.HealthKey, SlimeRancher.Area1.Area1UpgradeShop.DamageKey,
+            SlimeRancher.Area1.Area1UpgradeShop.WaterKey, SlimeRancher.Area1.Area1UpgradeShop.CollectorKey
+        };
+
+        bool HasProgress()
+        {
+            if (RanchGame.SaveExists(saveFileName)) return true;
+            foreach (var key in ProgressKeys) if (PlayerPrefs.HasKey(key)) return true;
+            return false;
+        }
+
+        void RefreshContinue()
+        {
+            var button = startPanel ? startPanel.transform.Find("CONTINUAR PARTIDA") : null;
+            if (!button) return;
+            bool exists = RanchGame.SaveExists(saveFileName);
+            button.GetComponent<Button>().interactable = exists;
+            var label = button.Find("Label");
+            if (label) label.GetComponent<Text>().text = exists ? "CONTINUAR PARTIDA" : "SIN PARTIDA GUARDADA";
+        }
+
+        // ---- Volume options ----
+        static readonly float[] VolumeSteps = { 1, .75f, .5f, .25f, 0 };
+
+        static float NextStep(float current)
+        {
+            int index = 0;
+            for (int i = 0; i < VolumeSteps.Length; i++) if (Mathf.Abs(VolumeSteps[i] - current) < .01f) index = i;
+            return VolumeSteps[(index + 1) % VolumeSteps.Length];
+        }
+
+        void CycleVolume() { SlimeGameOptions.Volume = NextStep(SlimeGameOptions.Volume); RefreshVolumeLabels(); }
+        void CycleMusic() { SlimeGameOptions.MusicVolume = NextStep(SlimeGameOptions.MusicVolume); RefreshVolumeLabels(); }
+
+        void RefreshVolumeLabels()
+        {
+            if (volumeLabel) volumeLabel.text = "VOLUMEN GENERAL: " + Mathf.RoundToInt(SlimeGameOptions.Volume * 100) + "%";
+            if (musicLabel) musicLabel.text = "MUSICA: " + Mathf.RoundToInt(SlimeGameOptions.MusicVolume * 100) + "%";
+        }
         public void SaveGame() { if (RanchGame.Instance) RanchGame.Instance.SaveGame(); }
         public void LoadGame() { if (RanchGame.Instance) RanchGame.Instance.LoadGame(); }
         public void ReturnToStart() { SaveGame(); CloseModal(); Time.timeScale = 1; SceneManager.LoadScene(startScene); }
-        public void QuitGame() { Application.Quit(); }
+        public void QuitGame()
+        {
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+#else
+            Application.Quit();
+#endif
+        }
 
         public void ShowControls()
         {

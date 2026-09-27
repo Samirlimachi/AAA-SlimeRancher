@@ -10,5 +10,7 @@ public sealed class RanchItemData : ScriptableObject {
  [Min(1)] public int stackLimit=20;
  [Min(0)] public int saleValue;
  [Min(.05f)] public float radius=.18f;
+ [Tooltip("Plorts que suelta un slime al comerse esta comida.")]
+ [Min(0)] public int plortsWhenEaten=1;
 }
 }

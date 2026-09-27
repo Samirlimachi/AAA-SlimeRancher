@@ -15,8 +15,7 @@ namespace SlimeRancher.Area1
         [SerializeField] bool showInventoryOnScreen;
         [Tooltip("En el visor, alto (en grados) que ocupa el HUD. Las esquinas del campo completo quedan fuera de los lentes.")]
         [SerializeField, Range(20, 80)] float headsetVerticalDegrees = 40;
-        Text coins, health, energy, clock, message;
-        Image messageBack;
+        Text coins, health, energy, clock;
         Image healthFill, energyFill;
         readonly Text[] names = new Text[4], counts = new Text[4];
         readonly Image[] borders = new Image[4], marks = new Image[4];
@@ -50,9 +49,6 @@ namespace SlimeRancher.Area1
             Icon3D(heartModel,heartTexture,root,UiPoint(60,124),46);
             var bolt=Element("Icono estamina",new Vector2(38,48),new Vector2(44,44)).gameObject.AddComponent<Image>();
             bolt.sprite=BoltSprite();bolt.material=hudMaterial;bolt.color=new Color(1,.86f,.25f);bolt.raycastTarget=false;
-            // Game notifications (RanchGame.Notify) are otherwise only drawn by desktop OnGUI.
-            messageBack=Panel("Mensaje fondo",new Vector2(240,560),new Vector2(800,70),new Color(.06f,.1f,.16f,.8f));
-            message=Label("Mensaje",new Vector2(252,560),new Vector2(776,70),26,TextAnchor.MiddleCenter);
             if(showInventoryOnScreen)
             {
                 for(int i=0;i<4;i++)
@@ -359,9 +355,6 @@ namespace SlimeRancher.Area1
                 waterFill.rectTransform.sizeDelta=new Vector2(244*Mathf.Clamp01((float)water.Amount/water.capacity),9);
                 waterBorder.color=water.WaterSelected?new Color(1,.78f,.2f):new Color(.2f,.75f,1);
             }
-            bool showMessage=Time.time<game.MessageUntil;
-            messageBack.enabled=message.enabled=showMessage;
-            if(showMessage)message.text=game.Message;
             coins.text="MONEDAS   "+game.coins;
             health.text="VIDA   "+Mathf.CeilToInt(game.health);
             energy.text="ESTAMINA   "+Mathf.CeilToInt(game.energy);

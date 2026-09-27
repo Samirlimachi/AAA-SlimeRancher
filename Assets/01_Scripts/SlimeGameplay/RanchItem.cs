@@ -35,10 +35,15 @@ public sealed class RanchItem : MonoBehaviour {
   EatenBySlime?.Invoke(food);
   SlimeRancher.Area1.Area1Audio.Play(b=>b.slimeComeVegetal,transform.position);
   hunger=20;
-  var plort=game.Spawn(RanchItemKind.PinkPlort,transform.position+Vector3.up*.65f,Quaternion.identity);
-  plort.Body.linearVelocity=Vector3.up*2;plort.graceUntil=Time.time+.5f;
+  // Richer food, more plorts: carrot 1, chicken 2, elder chicken 3 (RanchItemData.plortsWhenEaten).
+  int plorts=Mathf.Max(1,food.data.plortsWhenEaten);
+  for(int i=0;i<plorts;i++){
+   var spread=plorts>1?Quaternion.Euler(0,360f*i/plorts,0)*Vector3.forward*.9f:Vector3.zero;
+   var plort=game.Spawn(RanchItemKind.PinkPlort,transform.position+Vector3.up*(.65f+.12f*i),Quaternion.identity);
+   plort.Body.linearVelocity=Vector3.up*2+spread;plort.graceUntil=Time.time+.5f;
+  }
   SlimeRancher.Area1.Area1Audio.Play(b=>b.slimeSueltaPlort,transform.position,1,.35f); // right after the eating sound
-  game.Notify("¡Bien alimentado! Recoge el plort rosa y véndelo.");return true;
+  game.Notify(plorts>1?"¡Bien alimentado! Soltó "+plorts+" plorts rosas.":"¡Bien alimentado! Recoge el plort rosa y véndelo.");return true;
  }
 }
 }

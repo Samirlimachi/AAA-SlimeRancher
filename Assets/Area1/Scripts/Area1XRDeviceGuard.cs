@@ -1,8 +1,12 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.XR;
+using UnityEngine.SceneManagement;
+using UnityEngine.XR.Interaction.Toolkit.Inputs;
+using UnityEngine.XR.Interaction.Toolkit.Samples.StarterAssets;
 using UnityEngine.XR;
 using UnityEngine.XR.Management;
 using UnityEngine.XR.Interaction.Toolkit.Inputs.Simulation;
@@ -76,6 +80,37 @@ namespace SlimeRancher.Area1
         }
 
         float nextCheck;
+
+        // Changing scene (menu -> AREA1 or back): the new rig enables the shared XRI input actions, then the
+        // old rig is destroyed and disables them again, leaving hands and locomotion without input.
+        // A couple of frames after every scene load, re-enable them and restart the PC simulator.
+        void OnEnable() => SceneManager.sceneLoaded += OnSceneLoaded;
+        void OnDisable() => SceneManager.sceneLoaded -= OnSceneLoaded;
+        void OnSceneLoaded(Scene scene, LoadSceneMode mode) => StartCoroutine(RestoreInput());
+
+        IEnumerator RestoreInput()
+        {
+            yield return null;
+            yield return null;
+            foreach (var manager in FindObjectsByType<InputActionManager>())
+                if (manager.isActiveAndEnabled) manager.EnableInput();
+            // Re-apply move/teleport/turn choices on top of "everything enabled".
+            foreach (var controller in FindObjectsByType<ControllerInputActionManager>())
+            {
+                if (!controller.isActiveAndEnabled) continue;
+                controller.enabled = false;
+                controller.enabled = true;
+            }
+            // PC simulator (mouse/keyboard): it lives across scenes but keeps the previous scene's XR Origin
+            // and camera, so the hands stop following the mouse. Restarting it makes it find the new rig.
+            foreach (var simulator in FindObjectsByType<XRInteractionSimulator>())
+            {
+                if (!simulator.isActiveAndEnabled) continue;
+                simulator.enabled = false;
+                simulator.enabled = true;
+            }
+            SlimeRancherVR.SlimeGameOptions.Apply();
+        }
         float restoreHeadsetAt = -1;
 
         static void RememberHeadsets()

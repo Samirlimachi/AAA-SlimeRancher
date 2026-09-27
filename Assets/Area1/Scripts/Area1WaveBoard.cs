@@ -99,6 +99,7 @@ namespace SlimeRancher.Area1
                 else
                 {
                     Game.coins -= wave.price;
+                    Area1Audio.Play(b => b.compra, transform.position + Vector3.up * 1.5f);
                     purchased = level;
                     PlayerPrefs.SetInt(PurchasedKey, purchased);
                     PlayerPrefs.Save();
@@ -114,6 +115,7 @@ namespace SlimeRancher.Area1
             var wave = waves[level - 1];
             activeLevel = level;
             spawning = true;
+            Area1AmbientAudio.SetWaveMusic(true);
             toSpawn = wave.enemies;
             alive.Clear();
             Game.Notify("¡Oleada " + level + "! " + wave.enemies + " slimes enemigos" + (wave.boss ? " y el JEFE" : "") + ". Usa agua para neutralizarlos.");
@@ -164,6 +166,7 @@ namespace SlimeRancher.Area1
             int level = activeLevel;
             var wave = waves[level - 1];
             activeLevel = 0;
+            Area1AmbientAudio.SetWaveMusic(false);
             if (level > completed)
             {
                 completed = level;
@@ -217,6 +220,7 @@ namespace SlimeRancher.Area1
         {
             if (activeLevel <= 0) return;
             int level = activeLevel;
+            Area1AmbientAudio.SetWaveMusic(false);
             StopAllCoroutines();
             spawning = false;
             toSpawn = 0;

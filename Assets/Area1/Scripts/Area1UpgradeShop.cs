@@ -111,6 +111,7 @@ namespace SlimeRancher.Area1
             else
             {
                 Game.coins -= upgrade.prices[level];
+                Area1Audio.Play(b => b.compra, transform.position + Vector3.up * 1.5f);
                 PlayerPrefs.SetInt(upgrade.key, level + 1);
                 PlayerPrefs.Save();
                 Apply(upgrades[index].key == HealthKey);

@@ -30,6 +30,10 @@ namespace SlimeRancher.Area1.Editor
             ("cacareoPollo2", "chicken-noise-2", true),
             ("cacareoPollo3", "chicken-noise-3", true),
             ("ambienteArea1", "area1-bg-1", false),
+            ("musicaFondo", "MUSICA _FONDO", false),
+            ("musicaOleada", "MUSICA OLEADA", false),
+            ("musicaMenu", "MUSICA_MENU", false),
+            ("compra", "SONIDO DE COMPRAS", true),
             ("jugadorCamina", "Jugador_camina", false),
             ("jugadorSalto", "Salto_Jugador", false),
             ("jugadorAterrizaje", "Jugador_salto_aterrizage", false),
@@ -38,10 +42,27 @@ namespace SlimeRancher.Area1.Editor
             ("ganoOleada", "Gano_Oleada", false),
         };
 
+        // Long music files: streamed from disk and compressed, instead of fully loaded in memory.
+        static readonly string[] Music = { "musicaFondo", "musicaOleada", "musicaMenu" };
+        // Slots added after the first setup: filled automatically when their file appears.
+        static readonly string[] AutoFill = { "musicaFondo", "musicaOleada", "musicaMenu", "compra" };
+
         static Area1SoundBankSetup() => EditorApplication.delayCall += () =>
         {
-            if (!EditorApplication.isPlayingOrWillChangePlaymode && !AssetDatabase.LoadAssetAtPath<Area1SoundBank>(BankPath)) Setup();
+            if (EditorApplication.isPlayingOrWillChangePlaymode) return;
+            var bank = AssetDatabase.LoadAssetAtPath<Area1SoundBank>(BankPath);
+            if (!bank || HasEmptySlotWithFile(bank)) Setup();
         };
+
+        // A music slot is still empty although its file is in Assets/Sonidos (other slots may be emptied on purpose).
+        static bool HasEmptySlotWithFile(Area1SoundBank bank)
+        {
+            var names = AssetDatabase.FindAssets("t:AudioClip", new[] { SoundFolder })
+                .Select(g => System.IO.Path.GetFileNameWithoutExtension(AssetDatabase.GUIDToAssetPath(g)).Normalize()).ToArray();
+            var serialized = new SerializedObject(bank);
+            return Map.Any(m => AutoFill.Contains(m.slot) && names.Contains(m.file.Normalize()) &&
+                serialized.FindProperty(m.slot)?.FindPropertyRelative("clip").objectReferenceValue == null);
+        }
 
         [MenuItem("Area1/Asignar sonidos del juego")]
         public static void Setup()
@@ -64,6 +85,16 @@ namespace SlimeRancher.Area1.Editor
                 {
                     importer.forceToMono = true;
                     importer.SaveAndReimport();
+                }
+                if (Music.Contains(slot) && AssetImporter.GetAtPath(path) is AudioImporter musicImporter &&
+                    musicImporter.defaultSampleSettings.loadType != AudioClipLoadType.Streaming)
+                {
+                    var settings = musicImporter.defaultSampleSettings;
+                    settings.loadType = AudioClipLoadType.Streaming;
+                    settings.compressionFormat = AudioCompressionFormat.Vorbis;
+                    settings.quality = .7f;
+                    musicImporter.defaultSampleSettings = settings;
+                    musicImporter.SaveAndReimport();
                 }
                 var property = serialized.FindProperty(slot).FindPropertyRelative("clip");
                 if (property.objectReferenceValue) continue; // keep what the user chose

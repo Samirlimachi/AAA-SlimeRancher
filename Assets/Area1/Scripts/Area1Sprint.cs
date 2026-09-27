@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.XR.Interaction.Toolkit.Locomotion.Movement;
+using UnityEngine.XR.Interaction.Toolkit.Inputs.Simulation;
 
 namespace SlimeRancher.Area1
 {
@@ -11,7 +12,11 @@ namespace SlimeRancher.Area1
         [SerializeField] ContinuousMoveProvider moveProvider;
         [SerializeField, Min(0.1f)] float walkSpeed = 2.5f;
         [SerializeField, Min(0.1f)] float sprintSpeed = 5f;
+        [Tooltip("En el PC (simulador XR): cuántas veces más rápido va WASD mientras mantienes Shift izquierdo.")]
+        [SerializeField, Min(1)] float keyboardSprintMultiplier = 2f;
         InputAction sprint;
+        XRInteractionSimulator simulator;
+        float simulatorWalkMultiplier = -1, nextSimulatorSearch;
         public bool IsSprinting => sprint != null && sprint.IsPressed();
 
         void Awake()
@@ -27,18 +32,34 @@ namespace SlimeRancher.Area1
         void OnEnable() => sprint?.Enable();
         void Update()
         {
-            if (moveProvider != null)
-                {
-                bool moving = moveProvider.leftHandMoveInput.ReadValue().sqrMagnitude > .03f;
-                var game = SlimeRancherVR.RanchGame.Instance;
-                bool running = game ? game.Sprint(IsSprinting && moving, Time.deltaTime) : IsSprinting;
-                moveProvider.moveSpeed = running ? sprintSpeed : walkSpeed;
+            // Joystick (VR): sprint = click the left stick while moving.
+            bool stickMoving = moveProvider != null && moveProvider.leftHandMoveInput.ReadValue().sqrMagnitude > .03f;
+            // Keyboard (PC simulator): WASD moves the simulated body, not the move provider.
+            var keyboard = Keyboard.current;
+            bool keysMoving = keyboard != null && (keyboard.wKey.isPressed || keyboard.aKey.isPressed || keyboard.sKey.isPressed || keyboard.dKey.isPressed);
+            var game = SlimeRancherVR.RanchGame.Instance;
+            bool wantsRun = IsSprinting && (stickMoving || keysMoving);
+            bool running = game ? game.Sprint(wantsRun, Time.deltaTime) : wantsRun; // uses stamina
+            if (moveProvider != null) moveProvider.moveSpeed = running && stickMoving ? sprintSpeed : walkSpeed;
+            DriveSimulator(running && keysMoving);
+        }
+
+        void DriveSimulator(bool running)
+        {
+            if (!simulator && Time.unscaledTime >= nextSimulatorSearch)
+            {
+                nextSimulatorSearch = Time.unscaledTime + 1;
+                simulator = FindAnyObjectByType<XRInteractionSimulator>();
+                if (simulator) simulatorWalkMultiplier = simulator.bodyTranslateMultiplier;
             }
+            if (!simulator) return;
+            simulator.bodyTranslateMultiplier = running ? simulatorWalkMultiplier * keyboardSprintMultiplier : simulatorWalkMultiplier;
         }
         void OnDisable()
         {
             sprint?.Disable();
             if (moveProvider != null) moveProvider.moveSpeed = walkSpeed;
+            if (simulator && simulatorWalkMultiplier > 0) simulator.bodyTranslateMultiplier = simulatorWalkMultiplier;
         }
         void OnDestroy() => sprint?.Dispose();
     }

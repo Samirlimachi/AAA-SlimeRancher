@@ -63,6 +63,7 @@ namespace SlimeRancher.Area1
                 var item = Game.Spawn(offer.kind, transform.TransformPoint(local), Quaternion.Euler(0, Random.Range(0, 360f), 0));
                 item.graceUntil = Time.time + .5f;
                 Game.coins -= offer.price;
+                Area1Audio.Play(b => b.compra, transform.position + Vector3.up * 1.5f);
                 Game.Notify(data.itemName + " comprado por " + offer.price + " monedas. Está en el suelo frente a la tienda.");
             }
             Refresh();
@@ -82,8 +83,12 @@ namespace SlimeRancher.Area1
             {
                 var data = Game.Data(offers[i].kind);
                 bool affordable = Game.coins >= offers[i].price;
+                // Food shows how many plorts a slime gives for it.
+                bool food = offers[i].kind == RanchItemKind.Carrot || offers[i].kind == RanchItemKind.Chicken || offers[i].kind == RanchItemKind.ElderChicken;
+                int plorts = data ? Mathf.Max(1, data.plortsWhenEaten) : 1;
+                string gives = food ? "\nDa " + plorts + (plorts == 1 ? " plort" : " plorts") : "";
                 Area1Board.Show(slots[i], affordable ? Area1Board.Owned : Area1Board.Locked,
-                    data ? data.itemName.ToUpper() : offers[i].kind.ToString(), affordable ? "COMPRAR 1" : "SIN MONEDAS", offers[i].price);
+                    data ? data.itemName.ToUpper() : offers[i].kind.ToString(), (affordable ? "COMPRAR 1" : "SIN MONEDAS") + gives, offers[i].price);
             }
         }
     }
