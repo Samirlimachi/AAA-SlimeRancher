@@ -11,7 +11,7 @@ namespace SlimeRancherVR.Editor
     public static class MainMenuSceneCreator
     {
         const string ScenePath = "Assets/00_Scenes/MAIN_MENU.unity";
-        const string SkyboxPath = "Assets/Area1/Materiales/CieloArea1.mat";
+        const string SkyboxPath = "Assets/06_Materiales/Generados/CieloArea1.mat";
 
         [MenuItem("Beatrix/Crear o actualizar escena MAIN_MENU")]
         public static void Create()
@@ -35,7 +35,7 @@ namespace SlimeRancherVR.Editor
             var eventSystem = new GameObject("EventSystem", typeof(EventSystem), typeof(InputSystemUIInputModule));
             var menuRoot = new GameObject("Menus VR - Slime Rancher");
             var controller = menuRoot.AddComponent<SlimeMenuController>();
-            var theme = AssetDatabase.LoadAssetAtPath<SlimeMenuTheme>("Assets/01_Scripts/SlimeMenus/SlimeMenuTheme.asset");
+            var theme = AssetDatabase.LoadAssetAtPath<SlimeMenuTheme>("Assets/03_SO/Menus/SlimeMenuTheme.asset");
             if (theme)
             {
                 var serialized = new SerializedObject(controller);
@@ -98,9 +98,9 @@ namespace SlimeRancherVR.Editor
         static void CreateEnvironment()
         {
             var environment = new GameObject("Escenario del menu");
-            var groundMaterial = AssetDatabase.LoadAssetAtPath<Material>("Assets/Area1/Suelo.mat");
-            var grassMaterial = AssetDatabase.LoadAssetAtPath<Material>("Assets/Area1/Materiales/PastoMata.mat");
-            var flowerMaterial = AssetDatabase.LoadAssetAtPath<Material>("Assets/Area1/Materiales/PastoFlores.mat");
+            var groundMaterial = AssetDatabase.LoadAssetAtPath<Material>("Assets/06_Materiales/Area1/Suelo.mat");
+            var grassMaterial = AssetDatabase.LoadAssetAtPath<Material>("Assets/06_Materiales/Generados/PastoMata.mat");
+            var flowerMaterial = AssetDatabase.LoadAssetAtPath<Material>("Assets/06_Materiales/Generados/PastoFlores.mat");
             var ground = GameObject.CreatePrimitive(PrimitiveType.Plane);
             ground.name = "Suelo de pasto";
             ground.transform.SetParent(environment.transform, false);
@@ -108,13 +108,13 @@ namespace SlimeRancherVR.Editor
             ground.transform.localScale = new Vector3(25, 1, 25);
             if (groundMaterial) ground.GetComponent<Renderer>().sharedMaterial = groundMaterial;
             Object.DestroyImmediate(ground.GetComponent<Collider>());
-            CreateFoliage(environment.transform, "Matas de pasto", "Assets/Area1/Materiales/Matasdepasto.asset", grassMaterial);
-            CreateFoliage(environment.transform, "Flores", "Assets/Area1/Materiales/Flores.asset", flowerMaterial);
+            CreateFoliage(environment.transform, "Matas de pasto", "Assets/06_Materiales/Generados/Matasdepasto.asset", grassMaterial);
+            CreateFoliage(environment.transform, "Flores", "Assets/06_Materiales/Generados/Flores.asset", flowerMaterial);
             CreateHills(environment.transform, groundMaterial);
             CreatePrimitive("Plataforma del menu", PrimitiveType.Cube, environment.transform, new Vector3(0, .12f, 1.4f), new Vector3(3.4f, .2f, 2.2f), new Color(.56f, .32f, .16f));
             CreatePond(environment.transform);
 
-            var slimePrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Area1/PinkSlimeItem.prefab");
+            var slimePrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/02_Prefabs/Items/PinkSlimeItem.prefab");
             if (!slimePrefab) slimePrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/02_Prefabs/SlimeGameplay/SlimeRosado.prefab");
             if (slimePrefab)
             {
@@ -169,8 +169,8 @@ namespace SlimeRancherVR.Editor
             root.SetParent(parent, false);
             root.localPosition = new Vector3(-3.5f, 0, 1.5f);
 
-            var bedMaterial = AssetDatabase.LoadAssetAtPath<Material>("Assets/Area1/PondStone.mat");
-            var waterMaterial = AssetDatabase.LoadAssetAtPath<Material>("Assets/Area1/PondWater.mat");
+            var bedMaterial = AssetDatabase.LoadAssetAtPath<Material>("Assets/06_Materiales/Area1/PondStone.mat");
+            var waterMaterial = AssetDatabase.LoadAssetAtPath<Material>("Assets/06_Materiales/Area1/PondWater.mat");
             var rockAsset = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/04_Models/PIEDRA 1/Piedra1.obj");
             var bed = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
             bed.name = "Lecho de piedra";
@@ -189,7 +189,7 @@ namespace SlimeRancherVR.Editor
             Object.DestroyImmediate(water.GetComponent<Collider>());
 
             if (!rockAsset) return;
-            var stoneMaterial = bedMaterial ? bedMaterial : AssetDatabase.LoadAssetAtPath<Material>("Assets/Area1/Materiales/Piedra.mat");
+            var stoneMaterial = bedMaterial ? bedMaterial : AssetDatabase.LoadAssetAtPath<Material>("Assets/06_Materiales/Generados/Piedra.mat");
             var random = new System.Random(13);
             for (int i = 0; i < 10; i++)
             {
