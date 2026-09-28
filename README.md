@@ -1,18 +1,13 @@
 # AAA Slime Rancher VR
 
-## Avance de AREA1 y recuperación
+Experiencia de Realidad Virtual para **Oculus Quest** hecha en **Unity** con XR Interaction Toolkit, inspirada en *Slime Rancher*: el jugador cuida su rancho, alimenta slimes, vende plorts, mejora su equipo y defiende el rancho de oleadas de slimes malos.
 
-Los modelos OBJ están integrados con agarre XR, física, aspiración e inventario. Los colores propios se guardan en `Assets/Area1/OBJ`, incluidos los detalles de pollos, zanahoria, slimes y aspiradora. El enemigo se neutraliza con tres impactos de agua.
+Proyecto de auto aprendizaje de la materia **Realidad Virtual y Aumentada**.
 
-El simulador de PC muestra una sola vista completa. Mock HMD y el cargador de simulación AR están desactivados; OpenXR queda configurado para el visor real. Beatrix OBJ es una referencia en el escenario; el jugador conserva un cuerpo con esqueleto y seguimiento VR.
+## Equipo
 
-Se conservan los recursos antiguos que siguen siendo dependencias de las escenas. No borrarlos aunque AREA1 use modelos nuevos.
-
-Para recuperar el proyecto utiliza Git LFS y Unity **6000.5.6f1**. Después de clonar, ejecuta `git lfs pull` y `git lfs fsck`. Evita depender de Download ZIP para descargar los recursos LFS. Las versiones de los paquetes están fijadas en `Packages/manifest.json` y `Packages/packages-lock.json`; Unity las descargará durante la primera importación.
-
-No se incluyen partidas guardadas, preferencias personales del editor ni controladores/runtime del visor. Para Android instala Android Build Support, SDK, NDK y OpenJDK desde Unity Hub. El funcionamiento y rendimiento con visor físico requieren una prueba en ese dispositivo.
-
-Prototipo en Unity inspirado en Slime Rancher, con movimiento VR, manos visibles, aspiradora, inventario, slimes, pollos y un estanque para recoger agua.
+- Samir Limachi López
+- Tanina Magdiel Solís Quispe
 
 ## Abrir el proyecto
 
@@ -25,46 +20,71 @@ Prototipo en Unity inspirado en Slime Rancher, con movimiento VR, manos visibles
    git lfs pull
    ```
 
-3. Añade la carpeta clonada en Unity Hub y ábrela con **Unity 6000.5.6f1**, la versión indicada en `ProjectSettings/ProjectVersion.txt`.
-4. Los modelos actuales son OBJ/FBX; no necesitas Blender para abrir AREA1.
-5. Espera a que Unity descargue los paquetes e importe los recursos.
-6. Abre **`Assets/00_Scenes/AREA1.unity`** y pulsa Play.
+3. Añade la carpeta en Unity Hub y ábrela con **Unity 6000.5.6f1** (`ProjectSettings/ProjectVersion.txt`).
+4. Espera a que Unity descargue los paquetes e importe los recursos.
+5. Pulsa **Play**: el juego empieza siempre en **`Assets/00_Scenes/MAIN_MENU.unity`**, igual que en el build. Se puede desactivar en *Beatrix → Iniciar Play desde MAIN_MENU*.
 
-El proyecto utiliza OpenXR y XR Interaction Toolkit. Incluye el simulador de interacción XR para las pruebas en el Editor. Para jugar con un visor, configura el runtime OpenXR del dispositivo.
+Sin visor se prueba con el **XR Interaction Simulator** (teclado y mouse). Con visor, configura el runtime OpenXR del Quest (Link). Para el build de Android instala Android Build Support, SDK, NDK y OpenJDK desde Unity Hub.
 
-## Controles VR de AREA1
+Los modelos, imágenes y sonidos se guardan con **Git LFS**. `Library`, `Logs`, `Temp` y `UserSettings` se generan localmente y no se suben (ver `.gitignore`).
+
+## Estructura de carpetas
+
+```
+Assets/
+├── 00_Scenes/        MAIN_MENU (inicio) y AREA1 (juego)
+├── 01_Scripts/
+│   ├── Area1/        gameplay de AREA1: tiendas, oleadas, jefe, HUD, sonidos, efectos (+ Editor/)
+│   ├── SlimeGameplay/ núcleo: RanchGame (guardado), items, slimes, aspiradora (+ Editor/)
+│   └── SlimeMenus/   menú de inicio/pausa y opciones (+ Editor/)
+├── 02_Prefabs/       Items, Enemigos, Herramientas, Entorno
+├── 03_SO/            Scriptable Objects (Items, Slimes, Menus, Resources/SonidosJuego)
+├── 04_Models/        modelos OBJ/FBX, recolectores y mallas generadas
+├── 05_Sonidos/       efectos y música
+├── 06_Materiales/    materiales, texturas y shaders (Shaders/Resources para Shader.Find)
+└── 07_UI/            logo y material del HUD
+```
+
+`Samples`, `TextMesh Pro`, `VRTemplateAssets`, `XR`, `XRI`, `Settings` y `CompositionLayers` pertenecen a Unity y a los paquetes XR: no se mueven.
+
+## Scriptable Objects
+
+| Asset | Tipo | Para qué |
+| --- | --- | --- |
+| `03_SO/Items/*.asset` (zanahoria, pollo, pollo viejo, corazón, plort, slimes) | `RanchItemData` | Nombre, color, prefab, límite por ranura, valor de venta y plorts que da al comerla. Una sola lógica sirve para todos los objetos. |
+| `03_SO/Slimes/SlimeRosadoData.asset` | `SlimeData` | Salto del slime y cómo lo atrapa la aspiradora (alcance, ángulo y velocidad de succión). |
+| `03_SO/Resources/SonidosJuego.asset` | `Area1SoundBank` | Qué sonido y volumen usa cada evento (música, compras, slimes, jugador...). |
+| `03_SO/Menus/SlimeMenuTheme.asset` | `SlimeMenuTheme` | Colores, fuente y logo del menú. |
+
+## Sistema de guardado
+
+- **Guardar partida** (menú de pausa) y **Volver al menú** guardan en un JSON (`AREA1_rancho_v1.json` en `Application.persistentDataPath`): monedas, vida, inventario, posición y objetos del mundo.
+- **Continuar partida** (menú principal) carga ese archivo al entrar a AREA1.
+- Mejoras compradas, oleadas completadas y opciones (volumen, música, vibración, giro) se guardan en `PlayerPrefs`.
+- **Nueva partida** pide confirmación y borra la partida y el progreso.
+
+Flujo de prueba: jugar → Guardar → cerrar el juego → Continuar partida → el progreso vuelve.
+
+## Controles VR
 
 | Acción | Control |
 | --- | --- |
-| Caminar | Joystick izquierdo |
-| Correr | Pulsar el joystick izquierdo mientras te mueves |
-| Saltar | A del mando derecho |
-| Girar | Joystick derecho |
-| Agarrar o soltar objetos y aspiradora | Grip |
-| Aspirar objetos o cargar agua del estanque | Gatillo de la mano que sostiene la aspiradora |
-| Lanzar el objeto seleccionado o disparar agua | Gatillo de la otra mano, sin aspirar a la vez |
-| Cambiar ranura del inventario / volver desde agua | B del mando derecho |
-| Seleccionar o deseleccionar el depósito de agua | X del mando izquierdo |
+| Agarrar / soltar la aspiradora | Grip (una vez agarra, otra vez suelta) |
+| Agarrar objetos | Mantener Grip |
+| Aspirar objetos o cargar agua del estanque | Gatillo de la mano con la aspiradora |
+| Lanzar objeto | Gatillo de la otra mano |
+| Disparar agua | Ranura 5 (agua) + gatillo |
+| Cambiar ranura | A siguiente / B anterior |
+| Moverse / correr | Joystick izquierdo / hundirlo para correr |
+| Girar / teletransporte | Joystick derecho a los lados / adelante |
+| Tiendas y tablero de oleadas | Apuntar al botón y Grip |
+| Menú | Botón de tres rayas del mando izquierdo |
 
-## Mecánicas actuales
+En PC (simulador): WASD para moverse, Shift izquierdo para correr, clic derecho para mirar, Esc para el menú.
 
-- Caminar, correr con consumo de estamina y saltar.
-- Manos VR y agarre de la aspiradora con cualquiera de las manos.
-- Cuatro ranuras de inventario; vida, estamina, monedas, día y hora en el HUD.
-- Aspirar y lanzar slimes, zanahorias, plorts, pollos y pollos viejos.
-- Pollos que caminan y pueden alimentar a los slimes rosados para producir plorts.
-- Estanque con agua recargable y depósito independiente de 30 unidades.
-- Disparos de agua con salpicadura y empuje de objetos.
+## Mecánicas
 
-AREA1 tiene desactivada la carga y el guardado automáticos para las pruebas. En el Editor están disponibles F5 para guardar y F9 para cargar mediante el sistema de guardado existente.
-
-## Carpetas principales
-
-- `Assets/00_Scenes`: escenas, incluida AREA1.
-- `Assets/01_Scripts/SlimeGameplay`: lógica del juego.
-- `Assets/04_Models`: modelos y recursos del personaje y los objetos.
-- `Assets/Area1`: componentes, prefabs y materiales específicos de AREA1.
-- `Packages`: dependencias de Unity.
-- `ProjectSettings`: configuración del proyecto.
-
-Los modelos, imágenes y otros recursos binarios se almacenan con **Git LFS**. Las carpetas `Library`, `Logs`, `Temp` y `UserSettings` se generan localmente y no se incluyen en el repositorio.
+- **Rancho:** aspirar y lanzar objetos, alimentar slimes rosados (zanahoria 1 plort, pollo 2, pollo viejo 3) y vender plorts en el recolector.
+- **Tiendas:** comida y corazones de vida; mejoras permanentes de vida, daño de agua, tanque de agua y recolector.
+- **Oleadas:** 5 niveles de slimes malos que se desbloquean y compran; el nivel 5 trae al jefe, que escupe baba e invoca slimes. Se neutralizan con agua.
+- **Feedback:** HUD con vida, estamina y monedas, carteles de victoria/derrota, partículas, sonidos y música.

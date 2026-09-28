@@ -1,0 +1,86 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d02a2858bff3c446a1bf7e7a7481743, type: 3}
+  m_Name: SonidosJuego
+  m_EditorClassIdentifier: Assembly-CSharp::SlimeRancher.Area1.Area1SoundBank
+  aspiradoraSuccionando:
+    clip: {fileID: 8300000, guid: b489b2559478ccc418c1541eb297c1de, type: 3}
+    volume: 1
+  aspiradoraBota:
+    clip: {fileID: 8300000, guid: 33ec6637789f91e40b0a20cd56437747, type: 3}
+    volume: 1
+  aguaChoque:
+    clip: {fileID: 8300000, guid: 3afd5a5ebe31e5742a6d5a22fdc33bfa, type: 3}
+    volume: 1
+  slimeSalpicadura:
+    clip: {fileID: 8300000, guid: 723c4008094c9914da3da371548b2e26, type: 3}
+    volume: 0.5
+  ataqueSlime:
+    clip: {fileID: 8300000, guid: 09b186b749e4f2645bc7211f36a23d11, type: 3}
+    volume: 1
+  slimeComeVegetal:
+    clip: {fileID: 8300000, guid: 46bb87c945c7b1a41b5f5f56ad9d141c, type: 3}
+    volume: 1
+  slimeSueltaPlort:
+    clip: {fileID: 8300000, guid: 303a75d0da1e39f4c98ecd02a100b59a, type: 3}
+    volume: 1
+  plortCaeSuelo:
+    clip: {fileID: 8300000, guid: 2175434cb19a9054892f62e71d153955, type: 3}
+    volume: 0.7
+  plortEntraRecolector:
+    clip: {fileID: 8300000, guid: da95b1a91504053468525b1acaf40a5d, type: 3}
+    volume: 1
+  spawnPollo:
+    clip: {fileID: 8300000, guid: 3a9cd6fa5820db648a4d9020905182a3, type: 3}
+    volume: 1
+  cacareoPollo1:
+    clip: {fileID: 8300000, guid: 9b9211d3604eaf24880d10a2f6989e00, type: 3}
+    volume: 0.7
+  cacareoPollo2:
+    clip: {fileID: 8300000, guid: 2da645e799900db40836ab26dfcd3a5f, type: 3}
+    volume: 0.7
+  cacareoPollo3:
+    clip: {fileID: 8300000, guid: ad14177d3e560a84a890bf3d1e188b2d, type: 3}
+    volume: 0.7
+  musicaFondo:
+    clip: {fileID: 8300000, guid: b1e7ec3bd68026d408ddd6667855cc39, type: 3}
+    volume: 0.5
+  musicaOleada:
+    clip: {fileID: 8300000, guid: a08bbc1874893f8478a61fc18d892b3b, type: 3}
+    volume: 0.55
+  musicaMenu:
+    clip: {fileID: 8300000, guid: 9454e584021ce0a4c9154f7c5c9dc8dc, type: 3}
+    volume: 0.5
+  ambienteArea1:
+    clip: {fileID: 8300000, guid: da65da1ff20e36c42937b0b2d238a11d, type: 3}
+    volume: 0.35
+  jugadorCamina:
+    clip: {fileID: 8300000, guid: 0a5efa9c9f07c5d4da9c471fca19307d, type: 3}
+    volume: 0.6
+  jugadorSalto:
+    clip: {fileID: 8300000, guid: abb9ed417c4f7b94b9a3f2e9243e9baa, type: 3}
+    volume: 1
+  jugadorAterrizaje:
+    clip: {fileID: 8300000, guid: 421fc39fcc6882f4592475f01014fdfb, type: 3}
+    volume: 1
+  jugadorRecibeDanio:
+    clip: {fileID: 8300000, guid: 71cfc231439710245bb4802f306f038f, type: 3}
+    volume: 1
+  compra:
+    clip: {fileID: 8300000, guid: a305887d462fa4c46ae56e9ea8c558e3, type: 3}
+    volume: 1
+  clickMenu:
+    clip: {fileID: 8300000, guid: b6b171f199faec54ca960284c0fef7f7, type: 3}
+    volume: 1
+  ganoOleada:
+    clip: {fileID: 8300000, guid: d7cf6a9cffd083b4e800ec2b1e4ea616, type: 3}
+    volume: 1
