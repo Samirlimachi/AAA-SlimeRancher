@@ -35,9 +35,11 @@ public sealed class RanchGame : MonoBehaviour {
  public bool Loaded {get;private set;}
  // Health reached zero (before the respawn). Falling off the map does not count.
  public event Action Died;
+ // After every respawn (death or falling off the map), with the player back at the start.
+ public event Action Respawned;
  float nextSave=60,nextDamage; bool sprinting,lastInteract;
- Vector3 start;
- void Awake(){Instance=this;start=player?player.position:Vector3.zero;
+ Vector3 start;float startYaw;
+ void Awake(){Instance=this;start=player?player.position:Vector3.zero;startYaw=player?player.eulerAngles.y:0;
  #if UNITY_EDITOR
  if((UnityEditor.SessionState.GetBool("RanchValidation",false)||UnityEditor.SessionState.GetBool("VRControlValidation",false)||UnityEditor.SessionState.GetBool("PickupValidation",false))){autoSave=false;autoLoad=false;saveName="INICIO_validation_only.json";}
  #endif
@@ -54,7 +56,14 @@ public sealed class RanchGame : MonoBehaviour {
  public void ClearMessage(){MessageUntil=0;}
  public bool Sprint(bool wanted,float dt){sprinting=wanted&&energy>1;if(sprinting)energy=Mathf.Max(0,energy-18*dt);return sprinting;}
  public void Damage(float amount){if(Time.time<nextDamage)return;nextDamage=Time.time+1;health=Mathf.Max(0,health-amount);Notify("¡Cuidado con el agua profunda!");if(health<=0){Respawn();Died?.Invoke();}}
- public void Respawn(){MovePlayer(start,0);health=maxHealth;energy=100;clock+=60;Notify("De vuelta en el rancho. Ha pasado una hora.");}
+ // Back to the start point, facing the start direction. The head (not the rig centre) lands on the
+ // start point, so it works even after walking around the room.
+ public void Respawn(){
+  var cam=Camera.main;var point=start;
+  if(player&&cam&&cam.transform.IsChildOf(player)){var headOffset=Quaternion.Euler(0,startYaw-player.eulerAngles.y,0)*(cam.transform.position-player.position);headOffset.y=0;point-=headOffset;}
+  MovePlayer(point,startYaw);Physics.SyncTransforms();
+  health=maxHealth;energy=100;clock+=60;Notify("De vuelta en el rancho. Ha pasado una hora.");
+  Respawned?.Invoke();}
  void MovePlayer(Vector3 point,float yaw){if(!player)return;var cc=player.GetComponent<CharacterController>();bool enabled=cc&&cc.enabled;if(cc)cc.enabled=false;player.SetPositionAndRotation(point,Quaternion.Euler(0,yaw,0));if(cc)cc.enabled=enabled;}
  public bool BuyUpgrade(){if(upgrade>0){Notify("Depósitos mejorados: 30 objetos por ranura.");return false;}if(coins<150){Notify("Necesitas 150 monedas para mejorar los depósitos.");return false;}coins-=150;upgrade=1;Notify("¡Mejora comprada! 30 objetos por ranura.");return true;}
  void Update(){

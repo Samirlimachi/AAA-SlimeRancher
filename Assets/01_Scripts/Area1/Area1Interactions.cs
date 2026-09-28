@@ -1,6 +1,10 @@
+using System.Collections;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.XR;
+using UnityEngine.XR.Interaction.Toolkit.Interactables;
+using UnityEngine.XR.Interaction.Toolkit.Interactors;
 using SlimeRancherVR;
 
 namespace SlimeRancher.Area1
@@ -20,6 +24,51 @@ namespace SlimeRancher.Area1
         {
             if (!GetComponent<Area1PlayerSounds>()) gameObject.AddComponent<Area1PlayerSounds>();
             if (!GetComponent<Area1AmbientAudio>()) gameObject.AddComponent<Area1AmbientAudio>();
+            if (game) game.Respawned += OnRespawned;
+        }
+
+        void OnDestroy()
+        {
+            if (game) game.Respawned -= OnRespawned;
+        }
+
+        // After dying (in or out of a wave) the player is back at the start: bring the vacuum along.
+        // If it was in a hand it already travelled with the player; otherwise it goes to the right hand.
+        void OnRespawned()
+        {
+            var pickup = vacuum ? vacuum.GetComponent<VacuumPickup>() : null;
+            if (pickup && !pickup.IsHeld) StartCoroutine(GiveVacuum(pickup));
+        }
+
+        IEnumerator GiveVacuum(VacuumPickup pickup)
+        {
+            yield return null; // let the rig and hands settle at the start point
+            var grab = pickup.GetComponent<XRGrabInteractable>();
+            var hand = pickup.rightHand;
+            var interactors = hand ? hand.GetComponentsInChildren<XRBaseInputInteractor>() : new XRBaseInputInteractor[0];
+            var interactor = interactors.FirstOrDefault(i => i.isActiveAndEnabled && i is NearFarInteractor)
+                ?? interactors.FirstOrDefault(i => i.isActiveAndEnabled);
+            var body = pickup.GetComponent<Rigidbody>();
+            if (!grab || !interactor || !grab.interactionManager)
+            {
+                // No hand to hold it: leave it just in front of the player.
+                if (head && body)
+                {
+                    var front = Vector3.ProjectOnPlane(head.forward, Vector3.up).normalized;
+                    body.position = head.position + front * .5f + Vector3.down * .6f;
+                    if (!body.isKinematic) body.linearVelocity = Vector3.zero;
+                }
+                yield break;
+            }
+            if (body)
+            {
+                body.position = hand.position;
+                if (!body.isKinematic) { body.linearVelocity = Vector3.zero; body.angularVelocity = Vector3.zero; }
+            }
+            var manager = grab.interactionManager;
+            // Whatever that hand held before dying is let go.
+            foreach (var held in interactor.interactablesSelected.ToArray()) manager.SelectExit(interactor, held);
+            manager.SelectEnter(interactor, (IXRSelectInteractable)grab);
         }
 
         public void SelectNext()
