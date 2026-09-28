@@ -50,7 +50,7 @@ public sealed class PinkSlime : MonoBehaviour {
   wanderTarget=transform.position+facing*2;retargetAt=Time.time+4;
   nextHop=Mathf.Min(nextHop,Time.time+.35f);
  }
- public void Pull(Vector3 point,float speed){if(Captured)return;lastPull=Time.time;Body.useGravity=false;Body.linearVelocity=Vector3.MoveTowards(Body.linearVelocity,(point-transform.position).normalized*speed,35*Time.fixedDeltaTime);}
+ public void Pull(Vector3 point,float speed){if(Captured||Body.isKinematic)return;lastPull=Time.time;Body.useGravity=false;Body.linearVelocity=Vector3.MoveTowards(Body.linearVelocity,(point-transform.position).normalized*speed,35*Time.fixedDeltaTime);}
  public void SetHome(Vector3 position){initialPosition=position;wanderTarget=position;lastHopPosition=position;}
  void Update(){
   if(Captured)return;
