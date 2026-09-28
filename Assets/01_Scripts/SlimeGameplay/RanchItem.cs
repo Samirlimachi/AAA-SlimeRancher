@@ -14,11 +14,11 @@ public sealed class RanchItem : MonoBehaviour {
  void Awake(){Body=GetComponent<Rigidbody>();home=transform.position;if(!GetComponent<SlimeRancher.Area1.Area1KeepUpright>())gameObject.AddComponent<SlimeRancher.Area1.Area1KeepUpright>();if(!GetComponent<SlimeRancher.Area1.Area1ItemSounds>())gameObject.AddComponent<SlimeRancher.Area1.Area1ItemSounds>();}
  public void Place(Vector3 point, Quaternion rotation){transform.SetPositionAndRotation(point,rotation);Body.position=point;Body.rotation=rotation;home=point;var pink=GetComponent<PinkSlime>();if(pink)pink.SetHome(point);var chicken=GetComponent<SlimeRancher.Area1.Area1Chicken>();if(chicken)chicken.SetHome(point);}
  public bool Consume(){if(Consumed||!isActiveAndEnabled)return false;Consumed=true;gameObject.SetActive(false);Destroy(gameObject);return true;}
- public void Pull(Vector3 point,float speed){if(Consumed)return;lastPull=Time.time;var pink=GetComponent<PinkSlime>();if(pink){pink.Pull(point,speed);return;}Body.useGravity=false;Body.linearVelocity=Vector3.MoveTowards(Body.linearVelocity,(point-transform.position).normalized*speed,35*Time.fixedDeltaTime);}
+ public void Pull(Vector3 point,float speed){if(Consumed||Body.isKinematic)return;lastPull=Time.time;var pink=GetComponent<PinkSlime>();if(pink){pink.Pull(point,speed);return;}Body.useGravity=false;Body.linearVelocity=Vector3.MoveTowards(Body.linearVelocity,(point-transform.position).normalized*speed,35*Time.fixedDeltaTime);}
  void Update(){
   if(Consumed||!data)return;
   if(!GetComponent<PinkSlime>()&&Time.time-lastPull>.1f)Body.useGravity=true;
-  if(transform.position.y<-6){Place(new Vector3(Mathf.Clamp(home.x,-8,8),1,Mathf.Clamp(home.z,-8,8)),Quaternion.identity);Body.linearVelocity=Vector3.zero;}
+  if(transform.position.y<-6){Place(new Vector3(Mathf.Clamp(home.x,-8,8),1,Mathf.Clamp(home.z,-8,8)),Quaternion.identity);if(!Body.isKinematic)Body.linearVelocity=Vector3.zero;}
   if(data.kind!=RanchItemKind.PinkSlime)return;
   hunger=Mathf.Max(0,hunger-Time.deltaTime);
   if(hunger>0||Time.time<nextEat||Time.time<graceUntil)return;

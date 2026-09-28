@@ -87,7 +87,8 @@ namespace SlimeRancher.Area1
 
         void FixedUpdate()
         {
-            if (!item || item.Consumed || !body) return;
+            // Held in a hand (kinematic / item disabled): the hand moves it, not the AI.
+            if (!item || item.Consumed || !body || body.isKinematic || !item.enabled) return;
             if (!ValidTarget(target) || Time.time >= nextSearch)
             {
                 target = FindTarget();
